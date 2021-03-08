@@ -1,6 +1,6 @@
 # Description
 A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.html) program that responds to minecraft java clients' pings with a MOTD message and an icon.
-As Phantom works by responding to [Server List Pings](https://wiki.vg/Server_List_Ping), it is designed to work on extreme low-end servers.
+<br />As Phantom works by responding to [Server List Pings](https://wiki.vg/Server_List_Ping), it is designed to work on extreme low-end servers.
 
 Note that, by design, Phantom can not function as a playable/connectable server instance.
 
@@ -16,10 +16,10 @@ Note that, by design, Phantom can not function as a playable/connectable server 
 
 # Instructions
 ## Installing:
-This is a python program designed to be interpreted via [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).
+This is a python program designed to be interpreted via [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />
 Specifically, it has been tested on the [MicroPython Unix Port](http://docs.micropython.org/en/latest/unix/quickref.html).
 
-To install MicroPython on Unix, see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).
+To install MicroPython on Unix, see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).<br />
 To run this program, use `micropython phantom.py`
 
 # Configuration
