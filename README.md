@@ -20,7 +20,7 @@ This is a python program designed to be interpreted via [MicroPython](https://gi
 Specifically, it has been tested on the [MicroPython Unix Port](http://docs.micropython.org/en/latest/unix/quickref.html).
 
 To install MicroPython on Unix, see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).<br />
-To run this program, use `micropython phantom.py`
+To run this program, use `python phantom.py`
 
 # Configuration
 |Name|Type|Description|
