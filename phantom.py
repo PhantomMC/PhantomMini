@@ -4,12 +4,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
  @author: Thorin
+ 
+ 
+ Version 0.1.0
 """
 import socket
-import struct
 import json
-import time
-
+import struct
 JSON_Response = {
     "version": {
         "name": "1.16.5",
@@ -36,15 +37,91 @@ JSON_Response = {
     "favicon": "data:image/png;base64,<data>"
 }
 
-class StatusPing:
+
+host='localhost'
+port=25565
+timeout=5
+
+def pack_varint(data):
+        """ Pack the var int """
+        ordinal = b''
+
+        while True:
+            byte = data & 0x7F
+            data >>= 7
+            ordinal += struct.pack('B', byte | (0x80 if data > 0 else 0))
+
+            if data == 0:
+                break
+
+        return ordinal
+def pack_data(data):
+        """ Page the data """
+        if type(data) is str:
+            data = data.encode('utf8')
+            return pack_varint(len(data)) + data
+        elif type(data) is int:
+            return struct.pack('H', data)
+        elif type(data) is float:
+            return struct.pack('L', int(data))
+        else:
+            return data
+
+def unpack_varint(conn):
+        """ Unpack the varint """
+        data = 0
+        for i in range(5):
+            ordinal = conn.recv(1)
+
+            if len(ordinal) == 0:
+                print("pong",i)
+                break
+
+            byte = ord(ordinal)
+            data |= (byte & 0x7F) << 7*i
+
+            if not byte & 0x80:
+                print("ping", i)
+                break
+        
+        print(data)
+        return data
+
+
+def read_fully(connection):
+        """ Read the connection and return the bytes """
+        packet_length = unpack_varint(connection)
+        
+        if packet_length == 1:
+            return None
+        
+        byte = connection.recv(packet_length)
+
+        return byte
+
+
+def start():
     
-    def __init__(self, host='localhost', port=25565, timeout=5):
-        """ Init the hostname and the port """
-        self._host = host
-        self._port = port
-        self._timeout = timeout
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind((host, port))
+        s.listen()
+        conn, addr = s.accept()
+        with conn:
+            for i in range(0,3):
+                data = read_fully(conn)
+                print(data)
+                print("next")
+                if data is None:
+                    conn.sendall(pack_data(json.dumps(JSON_Response)))
+                    
+                    
+                
+                
+            
+start()
+
         
-        
+    
     
     
     
