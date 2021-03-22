@@ -6,7 +6,7 @@
  @author: Thorin
  
  
- Version 0.1.0
+ Version 0.1.1
 """
 import socket
 import json
@@ -92,31 +92,38 @@ def read_fully(connection):
         """ Read the connection and return the bytes """
         packet_length = unpack_varint(connection)
         
-        if packet_length == 1:
-            return None
-        
         byte = connection.recv(packet_length)
 
         return byte
 
+def connection_actions(conn):
+    with conn:
+        data = read_fully(conn)
+        print(data)
+        print("-------")
+        for i in range(0,10):
+            data = read_fully(conn)
+            print(data)
+            if False:
+                json_data = json.dumps(JSON_Response)
+                conn.sendall( pack_data(json_data) )
+            else:
+                conn.sendall(data)
+            
+            print("-------")
 
 def start():
-    
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    try:
         s.bind((host, port))
         s.listen()
         conn, addr = s.accept()
-        with conn:
-            for i in range(0,3):
-                data = read_fully(conn)
-                print(data)
-                print("next")
-                if data is None:
-                    conn.sendall(pack_data(json.dumps(JSON_Response)))
-                    
+        connection_actions(conn)
+    finally:
+        s.close()
                     
                 
-                
+    
             
 start()
 
