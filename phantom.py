@@ -58,7 +58,8 @@ def pack_varint(data):
 
 def write_response():
     json_data = json.dumps(JSON_Response).encode('utf8')
-    return pack_varint(len(json_data)) + b'\x00' + json_data
+    
+    return  pack_varint(len(json_data)+1) + b'\x00' + pack_varint(len(json_data)+3) + json_data
 
 def unpack_varint(conn):
         """ Unpack the varint """
