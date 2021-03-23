@@ -6,7 +6,7 @@
  @author: Thorin
  
  
- Version 0.1.1
+ Version 0.1.3
 """
 import socket
 import json
@@ -43,23 +43,28 @@ port=25565
 timeout=5
 
 def pack_varint(data):
-        """ Pack the var int """
-        ordinal = b''
+     """ Pack the var int """
+     ordinal = b''
+     while True:
+         byte = data & 0x7F
+         data >>= 7
+         ordinal += struct.pack('B', byte | (0x80 if data > 0 else 0))
 
-        while True:
-            byte = data & 0x7F
-            data >>= 7
-            ordinal += struct.pack('B', byte | (0x80 if data > 0 else 0))
+         if data == 0:
+             break
 
-            if data == 0:
-                break
+     return ordinal
 
-        return ordinal
+
+def write_response():
+    json_data = json.dumps(JSON_Response)
+    return pack_varint(len(json_data)) + b'\x00' + json_data
+    
 def pack_data(data):
         """ Page the data """
         if type(data) is str:
             data = data.encode('utf8')
-            return pack_varint(len(data)) + data
+            return pack_varint(len(data)) + b'\x00' + data
         elif type(data) is int:
             return struct.pack('H', data)
         elif type(data) is float:
@@ -84,7 +89,6 @@ def unpack_varint(conn):
                 print("ping", i)
                 break
         
-        print(data)
         return data
 
 
@@ -97,20 +101,22 @@ def read_fully(connection):
         return byte
 
 def connection_actions(conn):
-    with conn:
+    try:
         data = read_fully(conn)
         print(data)
         print("-------")
         for i in range(0,10):
             data = read_fully(conn)
-            print(data)
-            if False:
+            print("recieved data:",data)
+            if data == b'\x00':
                 json_data = json.dumps(JSON_Response)
-                conn.sendall( pack_data(json_data) )
+                conn.sendall(pack_data(json_data) )
+                print(pack_data(json_data))
             else:
                 conn.sendall(data)
-            
             print("-------")
+    finally:
+        conn.close()
 
 def start():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
