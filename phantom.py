@@ -57,20 +57,8 @@ def pack_varint(data):
 
 
 def write_response():
-    json_data = json.dumps(JSON_Response)
+    json_data = json.dumps(JSON_Response).encode('utf8')
     return pack_varint(len(json_data)) + b'\x00' + json_data
-    
-def pack_data(data):
-        """ Page the data """
-        if type(data) is str:
-            data = data.encode('utf8')
-            return pack_varint(len(data)) + b'\x00' + data
-        elif type(data) is int:
-            return struct.pack('H', data)
-        elif type(data) is float:
-            return struct.pack('L', int(data))
-        else:
-            return data
 
 def unpack_varint(conn):
         """ Unpack the varint """
@@ -108,10 +96,9 @@ def connection_actions(conn):
         for i in range(0,10):
             data = read_fully(conn)
             print("recieved data:",data)
-            if data == b'\x00':
-                json_data = json.dumps(JSON_Response)
-                conn.sendall(pack_data(json_data) )
-                print(pack_data(json_data))
+            if data == b'\x00' or b'':
+                conn.sendall(write_response() )
+                print(write_response())
             else:
                 conn.sendall(data)
             print("-------")
