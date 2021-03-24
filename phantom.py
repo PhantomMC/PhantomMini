@@ -22,16 +22,12 @@ JSON_Response = {
         "sample": []
     },
     "description": {
-        "text": "foo",
+        "text": "Locked",
         "bold": "true",
         "extra": [
-        {"text": "bar"},
         
-        {"text": "baz",
-         "bold": "false"},
-        
-        {"text": "qux",
-         "bold": "true"}
+        {"text": "Craft",
+         "bold": "false"}
         ]
     },
     "favicon": "data:image/png;base64,<data>"
@@ -68,16 +64,14 @@ def unpack_varint(conn):
             ordinal = conn.recv(1)
 
             if len(ordinal) == 0:
-                print("pong",i)
                 break
 
             byte = ord(ordinal)
             data |= (byte & 0x7F) << 7*i
 
             if not byte & 0x80:
-                print("ping", i)
                 break
-        
+        print(data)
         return data
 
 
@@ -91,17 +85,18 @@ def read_fully(connection):
 
 def connection_actions(conn):
     try:
-        data = read_fully(conn)
+        data = read_fully(conn)#accept handshake
         print(data)
         print("-------")
-        for i in range(0,10):
+        for i in range(0,2):
             data = read_fully(conn)
             print("recieved data:",data)
             if data == b'\x00':
                 conn.sendall(write_response())
-                print(write_response())
+                print("Sending:", write_response())
             else:
-                conn.sendall(data)
+                conn.sendall(pack_varint(len(data)+1) + data)
+                print("Sending",pack_varint(len(data)+1)+data)
             print("-------")
     finally:
         conn.close()
