@@ -58,8 +58,8 @@ def pack_varint(data):
 
 def write_response():
     json_data = json.dumps(JSON_Response).encode('utf8')
-    
-    return  pack_varint(len(json_data)+1) + b'\x00' + pack_varint(len(json_data)+3) + json_data
+    print(len(json_data))
+    return  pack_varint(len(json_data)+3) + b'\x00' + pack_varint(len(json_data)) + json_data
 
 def unpack_varint(conn):
         """ Unpack the varint """
@@ -97,8 +97,8 @@ def connection_actions(conn):
         for i in range(0,10):
             data = read_fully(conn)
             print("recieved data:",data)
-            if data == b'\x00' or b'':
-                conn.sendall(write_response() )
+            if data == b'\x00':
+                conn.sendall(write_response())
                 print(write_response())
             else:
                 conn.sendall(data)
