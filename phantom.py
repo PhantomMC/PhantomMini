@@ -6,11 +6,24 @@
  @author: Thorin
  
  
- Version 0.1.3
+ Version 0.2.0
 """
 import socket
 import json
 import struct
+import base64
+
+
+binary_file = open('TestLogo.png', 'rb')
+
+try:
+    binary_file_data = binary_file.read()
+    base64_encoded_data = base64.b64encode(binary_file_data)
+    base64_message = base64_encoded_data.decode('utf-8')
+finally:
+    binary_file.close()
+    
+    
 JSON_Response = {
     "version": {
         "name": "1.16.5",
@@ -30,7 +43,7 @@ JSON_Response = {
          "bold": "false"}
         ]
     },
-    "favicon": "data:image/png;base64,<data>"
+    "favicon": "data:image/png;base64," + base64_message
 }
 
 
@@ -55,7 +68,8 @@ def pack_varint(data):
 def write_response():
     json_data = json.dumps(JSON_Response).encode('utf8')
     print(len(json_data))
-    return  pack_varint(len(json_data)+3) + b'\x00' + pack_varint(len(json_data)) + json_data
+    response = b'\x00' + pack_varint(len(json_data)) + json_data
+    return  pack_varint(len(response)) + response
 
 def unpack_varint(conn):
         """ Unpack the varint """
@@ -86,17 +100,18 @@ def read_fully(connection):
 def connection_actions(conn):
     try:
         data = read_fully(conn)#accept handshake
-        print(data)
+        print("Recieved:",data)
         print("-------")
-        for i in range(0,2):
+        while True:
             data = read_fully(conn)
-            print("recieved data:",data)
+            print("Recieved:",data)
             if data == b'\x00':
                 conn.sendall(write_response())
                 print("Sending:", write_response())
             else:
                 conn.sendall(pack_varint(len(data)+1) + data)
                 print("Sending",pack_varint(len(data)+1)+data)
+                break
             print("-------")
     finally:
         conn.close()
@@ -105,9 +120,11 @@ def start():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.bind((host, port))
-        s.listen()
-        conn, addr = s.accept()
-        connection_actions(conn)
+        while True:
+            s.listen(1)
+            conn, addr = s.accept()
+            connection_actions(conn)
+        
     finally:
         s.close()
                     
