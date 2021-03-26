@@ -36,6 +36,13 @@ Version 0.0.0
         | |_ Feature Release (Adds a new feature)
         |_ Milestone Release (Adds a major feature from /PhantomServer/milestones)
 ```
+#### [Version 0.2.0]
+ - Send logo to client
+ - Establish connection with multiple clients syncronously (poor but working solution)
+#### [Version 0.1.3]
+ - Establish connection with client
+ - Write proper json response
+ - Respond client ping with a pong
 #### [Version 0.0.0]
  - Structured Project
  - Added initial documentation and licencing.
