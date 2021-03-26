@@ -6,7 +6,7 @@
  @author: Thorin
  
  
- Version 0.2.0
+ Version 0.3.0
 """
 import socket
 import json
@@ -51,6 +51,19 @@ host='localhost'
 port=25565
 timeout=5
 
+disconnect_chat = "Fuck_you"
+
+
+
+def read_handshake(conn):
+    packet_length = unpack_varint(conn);
+    packet_id = unpack_varint(conn)
+    protocol_version = unpack_varint(conn)
+    string_length = unpack_varint(conn)
+    server_address = conn.recv(string_length)
+    client_port = conn.recv(2)
+    state = unpack_varint(conn)
+    return protocol_version,state
 def pack_varint(data):
      """ Pack the var int """
      ordinal = b''
@@ -63,12 +76,13 @@ def pack_varint(data):
              break
 
      return ordinal
-
+def pack_string(astring):
+    data = astring.encode('utf8')
+    return pack_varint(len(data)) + data
 
 def write_response():
-    json_data = json.dumps(JSON_Response).encode('utf8')
-    print(len(json_data))
-    response = b'\x00' + pack_varint(len(json_data)) + json_data
+    json_string = json.dumps(JSON_Response)
+    response = b'\x00' + pack_string(json_string)
     return  pack_varint(len(response)) + response
 
 def unpack_varint(conn):
@@ -92,27 +106,51 @@ def unpack_varint(conn):
 def read_fully(connection):
         """ Read the connection and return the bytes """
         packet_length = unpack_varint(connection)
-        
         byte = connection.recv(packet_length)
 
         return byte
 
+def status_connection(conn):
+    while True:
+        data = read_fully(conn)
+        print("Recieved:",data)
+        if data == b'\x00':
+            conn.sendall(write_response())
+            print("Sent: ", write_response())
+        elif data == b'':
+            break
+        else:
+            conn.sendall(pack_varint(len(data)) + data)
+            print("Sending",pack_varint(len(data))+data)
+            break
+
+def compile_disconnect_data():
+    chat_data = pack_string( disconnect_chat )
+    full_data = b'\x00' + chat_data
+    return pack_varint(len(full_data)) + full_data
+
+def login_connection(conn):
+    
+    recieved_data = read_fully(conn)
+    
+    print(recieved_data)
+    
+    final_data = compile_disconnect_data();
+    
+    print("final_data: ",final_data)
+    conn.sendall(final_data)
+    
+
 def connection_actions(conn):
     try:
-        data = read_fully(conn)#accept handshake
-        print("Recieved:",data)
         print("-------")
-        while True:
-            data = read_fully(conn)
-            print("Recieved:",data)
-            if data == b'\x00':
-                conn.sendall(write_response())
-                print("Sending:", write_response())
-            else:
-                conn.sendall(pack_varint(len(data)+1) + data)
-                print("Sending",pack_varint(len(data)+1)+data)
-                break
-            print("-------")
+        protocol_version,data = read_handshake(conn)
+        print("Recieved hanshake with id:",data)
+        print("-------")
+        if data == 1:
+            status_connection(conn)
+        elif data == 2:
+            login_connection(conn)
     finally:
         conn.close()
 
