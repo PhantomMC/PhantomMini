@@ -36,6 +36,9 @@ Version 0.0.0
         | |_ Feature Release (Adds a new feature)
         |_ Milestone Release (Adds a major feature from /PhantomServer/milestones)
 ```
+#### [Version 0.3.0]
+ - Send disconnect message
+ - Code structure improvements
 #### [Version 0.2.0]
  - Send logo to client
  - Establish connection with multiple clients syncronously (poor but working solution)
