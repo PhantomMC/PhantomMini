@@ -24,7 +24,7 @@ defaultConfig = {
         },
     "graphics" : {
         "MOTD" : "This is a fake server",
-        "DisconnectMessage" : "You got rickrolled",
+        "DisconnectMessage" : "You_got_rickrolled",
         "png_image_link" : "logo.png",
         "players": {
             "max": 0,
