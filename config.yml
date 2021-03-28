@@ -25,7 +25,7 @@
 
 
 # Version of this config. Please do not change.
-configVersion: 2
+configVersion: 3
 
 # Where do you want phantom to run?
 serverInfo:
@@ -58,7 +58,7 @@ Content:
     # Text shown above the server (Max ? Chars.)
     upperMessage: §fThis msg appears above the server!
     # This text will appear when someone hovers over the server's status indicator (max 5 ?char lines)
-    upperMessage: |-
+    hoverMessage: |-
       §7[§f§lPhantom§7]
       §bThis is some example text
       §3It can be five lines long.
