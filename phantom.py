@@ -17,35 +17,20 @@ import yaml;
 
 
 defaultConfig = {
-    "networking" : {
-        "host" : "localhost",
-        "port" : 754,
-        "timeout" : 5
-        },
-    "graphics" : {
-        "MOTD" : "This is a fake server",
-        "DisconnectMessage" : "You_got_rickrolled",
-        "png_image_link" : "logo.png",
-        "players": {
-            "max": 0,
-            "online": 0,
-            "sample": [] 
+        "configVersion" : 1,
+        "serverInfo" : {
+            "host" : "localhost",
+            "port" : 25565
             },
-        "description": {
-            "text": "Locked",
-            "bold": "true",
-            "extra": [
-            
-            {"text": "Craft",
-             "bold": "false"}
-            ]
-            },
-        "version" : {
-            "name" : "Test",
-            "protocoll" : -1 ,
+        "Style" : 1, #chose between 1, 2 and 3
+        "Content" : {
+            "lowerMessage" : "A message",
+            "upperMessage": "§fThis msg appears above the server!",
+            "hoverMessage" : "You should have brought a config",
+            "kickMessage" : "<Angry>",
+            "imagePath" : "Logo.png"
             }
-        }
-    
+        
     }
 
 
@@ -54,6 +39,7 @@ try:
     config_file = open("config.yml")
 except IOError:
     config_file = open("config.yml","w+")
+    print("No config was found, provididing a shittier one")
     config_file.write(yaml.dump(defaultConfig))
 try:
     config = yaml.load(config_file)
@@ -63,7 +49,7 @@ finally:
 
 
 
-binary_file = open(config["png_image_link"])
+binary_file = open(Content["imagePath"])
 
 try:
     binary_file_data = binary_file.read()
@@ -73,18 +59,27 @@ finally:
     binary_file.close()
     
 
-JSON_Response = {
-    "version": {
-        config["version"]
-    },
-    "players": {
-        config["players"]
-    },
-    "description": {
-        config["description"]
-    },
-    "favicon": "data:image/png;base64," + base64_message
-}
+def JSON_Response(protocol_version):
+    Content = config["Content"]
+    maxPlayers = 0
+    if config["Style"] == 3:
+        maxplayers = 1
+    if config["Style"] == 1:
+        protocol_version = -1;
+        
+    
+    return {
+        "version" : {
+            "name":Content["upperMessage"],
+            "protocol":protocol_version
+            },
+        "players": {
+            "max": maxplayers,
+            "online": 0,
+            "sample" : []},
+        "favicon": "data:image/png;base64" + base64_message
+        }
+    
 
 
 host='localhost'
