@@ -12,9 +12,58 @@ import socket
 import json
 import struct
 import base64
+import yaml;
 
 
-binary_file = open('TestLogo.png', 'rb')
+
+defaultConfig = {
+    "networking" : {
+        "host" : "localhost",
+        "port" : 754,
+        "timeout" : 5
+        },
+    "graphics" : {
+        "MOTD" : "This is a fake server",
+        "DisconnectMessage" : "You got rickrolled",
+        "png_image_link" : "logo.png",
+        "players": {
+            "max": 0,
+            "online": 0,
+            "sample": [] 
+            },
+        "description": {
+            "text": "Locked",
+            "bold": "true",
+            "extra": [
+            
+            {"text": "Craft",
+             "bold": "false"}
+            ]
+            },
+        "version" : {
+            "name" : "Test",
+            "protocoll" : -1 ,
+            }
+        }
+    
+    }
+
+
+
+try:
+    config_file = open("config.yml")
+except IOError:
+    config_file = open("config.yml","w+")
+    config_file.write(yaml.dump(defaultConfig))
+try:
+    config = yaml.load(config_file)
+    print(config)
+finally:
+    config_file.close()
+
+
+
+binary_file = open(config["png_image_link"])
 
 try:
     binary_file_data = binary_file.read()
@@ -23,25 +72,16 @@ try:
 finally:
     binary_file.close()
     
-    
+
 JSON_Response = {
     "version": {
-        "name": "1.16.5",
-        "protocol": 754
+        config["version"]
     },
     "players": {
-        "max": 0,
-        "online": 0,
-        "sample": []
+        config["players"]
     },
     "description": {
-        "text": "Locked",
-        "bold": "true",
-        "extra": [
-        
-        {"text": "Craft",
-         "bold": "false"}
-        ]
+        config["description"]
     },
     "favicon": "data:image/png;base64," + base64_message
 }
@@ -51,8 +91,6 @@ host='localhost'
 port=25565
 timeout=5
 
-disconnect_chat = "Fuck_you"
-
 
 
 def read_handshake(conn):
@@ -60,7 +98,7 @@ def read_handshake(conn):
     packet_id = unpack_varint(conn)
     protocol_version = unpack_varint(conn)
     string_length = unpack_varint(conn)
-    server_address = conn.recv(string_length)
+    client_address = conn.recv(string_length)
     client_port = conn.recv(2)
     state = unpack_varint(conn)
     return protocol_version,state
@@ -125,7 +163,7 @@ def status_connection(conn):
             break
 
 def compile_disconnect_data():
-    chat_data = pack_string( disconnect_chat )
+    chat_data = pack_string( config["DisconnectMessage"] )
     full_data = b'\x00' + chat_data
     return pack_varint(len(full_data)) + full_data
 

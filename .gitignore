@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 .project
 TestLogo.png
+config.yml
+Logo.png
