@@ -15,70 +15,74 @@ import base64
 import yaml;
 
 
-
 defaultConfig = {
         "configVersion" : 1,
         "serverInfo" : {
             "host" : "localhost",
             "port" : 25565
-            },
+        },
         "Style" : 1, #chose between 1, 2 and 3
         "Content" : {
             "lowerMessage" : "A message",
-            "upperMessage": "§fThis msg appears above the server!",
+            "upperMessage": "This msg appears above the server!",
             "hoverMessage" : "You should have brought a config",
-            "kickMessage" : "<Angry>",
+            "kickMessage" : "Angry",
             "imagePath" : "Logo.png"
-            }
+        }
         
     }
 
 
+while True:
+    try:
+        config_file = open("config.yml")
+        config = yaml.load(config_file)
+        print(config)
+        config_file.close()
+        break
+    except IOError:
+        config_file = open("config.yml","w+")
+        print("No config was found, provididing a shittier one")
+        config_file.write(yaml.dump(defaultConfig))
+        config_file.close()
+    finally:
+        config_file.close()
 
-try:
-    config_file = open("config.yml")
-except IOError:
-    config_file = open("config.yml","w+")
-    print("No config was found, provididing a shittier one")
-    config_file.write(yaml.dump(defaultConfig))
-try:
-    config = yaml.load(config_file)
-    print(config)
-finally:
-    config_file.close()
 
-
-
+Content = config["Content"]
 binary_file = open(Content["imagePath"])
 
 try:
     binary_file_data = binary_file.read()
     base64_encoded_data = base64.b64encode(binary_file_data)
     base64_message = base64_encoded_data.decode('utf-8')
+except UnicodeDecodeError:
+    print("Can't find image from imagepath")
 finally:
     binary_file.close()
     
 
 def JSON_Response(protocol_version):
-    Content = config["Content"]
-    maxPlayers = 0
+    
+    max_players = 0
     if config["Style"] == 3:
-        maxplayers = 1
+        max_players = 1
     if config["Style"] == 1:
         protocol_version = -1;
         
-    
-    return {
+    JSON = {
         "version" : {
             "name":Content["upperMessage"],
             "protocol":protocol_version
             },
         "players": {
-            "max": maxplayers,
+            "max": max_players,
             "online": 0,
             "sample" : []},
+        "description": Content["lowerMessage"],
         "favicon": "data:image/png;base64" + base64_message
         }
+    return JSON
     
 
 
@@ -90,7 +94,7 @@ timeout=5
 
 def read_handshake(conn):
     packet_length = unpack_varint(conn);
-    packet_id = unpack_varint(conn)
+    packet_id = unpack_varint(conn) #TODO check if invalid
     protocol_version = unpack_varint(conn)
     string_length = unpack_varint(conn)
     client_address = conn.recv(string_length)
@@ -113,8 +117,8 @@ def pack_string(astring):
     data = astring.encode('utf8')
     return pack_varint(len(data)) + data
 
-def write_response():
-    json_string = json.dumps(JSON_Response)
+def write_response(protocol_version):
+    json_string = json.dumps(JSON_Response(protocol_version))
     response = b'\x00' + pack_string(json_string)
     return  pack_varint(len(response)) + response
 
@@ -143,13 +147,13 @@ def read_fully(connection):
 
         return byte
 
-def status_connection(conn):
+def status_connection(conn,protocol_version):
     while True:
         data = read_fully(conn)
         print("Recieved:",data)
         if data == b'\x00':
-            conn.sendall(write_response())
-            print("Sent: ", write_response())
+            conn.sendall(write_response(protocol_version))
+            print("Sent: ", write_response(protocol_version))
         elif data == b'':
             break
         else:
@@ -158,7 +162,7 @@ def status_connection(conn):
             break
 
 def compile_disconnect_data():
-    chat_data = pack_string( config["DisconnectMessage"] )
+    chat_data = pack_string( Content["kickMessage"] )
     full_data = b'\x00' + chat_data
     return pack_varint(len(full_data)) + full_data
 
@@ -181,7 +185,7 @@ def connection_actions(conn):
         print("Recieved hanshake with id:",data)
         print("-------")
         if data == 1:
-            status_connection(conn)
+            status_connection(conn,protocol_version)
         elif data == 2:
             login_connection(conn)
     finally:
