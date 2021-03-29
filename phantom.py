@@ -12,9 +12,9 @@ import socket
 import json
 import struct
 import base64
-import yaml;
-
-
+import yaml
+import os
+import re
 defaultConfig = {
         "configVersion" : 1,
         "serverInfo" : {
@@ -38,6 +38,10 @@ while True:
         config_file = open("config.yml")
         config = yaml.load(config_file)
         print(config)
+        if(config["configVersion"] != defaultConfig["configVersion"]):
+            print("Providing you with a newer config")
+            os.renames("config.yml", "config.yml.old")
+            continue
         config_file.close()
         break
     except IOError:
@@ -50,7 +54,7 @@ while True:
 
 
 Content = config["Content"]
-binary_file = open(Content["imagePath"])
+binary_file = open(Content["imagePath"],'rb')
 
 try:
     binary_file_data = binary_file.read()
@@ -63,6 +67,13 @@ finally:
     
 
 def JSON_Response(protocol_version):
+    virtual_Playernames = re.split("\n", Content["hoverMessage"])
+    
+    virtual_players = []
+    print(virtual_Playernames)
+    for playername in virtual_Playernames:
+        playerDict = {"name":playername,"id": "4566e69f-c907-48ee-8d71-d7ba5aa00d20"}
+        virtual_players.append(playerDict)
     
     max_players = 0
     if config["Style"] == 3:
@@ -78,7 +89,7 @@ def JSON_Response(protocol_version):
         "players": {
             "max": max_players,
             "online": 0,
-            "sample" : []},
+            "sample" : virtual_players},
         "description": Content["lowerMessage"],
         "favicon": "data:image/png;base64" + base64_message
         }
