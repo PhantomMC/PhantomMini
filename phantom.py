@@ -16,7 +16,7 @@ import yaml
 import os
 import re
 defaultConfig = {
-        "configVersion" : 1,
+        "configVersion" : 3,
         "serverInfo" : {
             "host" : "localhost",
             "port" : 25565
@@ -40,7 +40,7 @@ while True:
         print(config)
         if(config["configVersion"] != defaultConfig["configVersion"]):
             print("Providing you with a newer config")
-            os.renames("config.yml", "config.yml.old")
+            os.renames("config.yml", "config.old")
             continue
         config_file.close()
         break
