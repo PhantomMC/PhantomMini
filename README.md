@@ -36,6 +36,10 @@ Version 0.0.0
         | |_ Feature Release (Adds a new feature)
         |_ Milestone Release (Adds a major feature from /PhantomServer/milestones)
 ```
+#### [Version 0.5.0]
+ - Working config
+ - 3 different serverstyles
+ - Can replace old config
 #### [Version 0.3.0]
  - Send disconnect message
  - Code structure improvements
