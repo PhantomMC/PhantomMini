@@ -1,9 +1,9 @@
 Content:
   hoverMessage: |-
-      §7[§f§lPhantom§7]
-      §bThis is some example text
-      §3It can be five lines long.
-      §3I think at least.
+      &7[&f&lPhantom&7]
+      &bThis is some example text
+      &3It can be five lines long.
+      &3I think at least.
     # What text is sent to users who try to connect to the server?
   imagePath: Logo.png
   kickMessage: |-
@@ -11,8 +11,8 @@ Content:
       §4Players who connect will be
       §4kicked with §cthis message§4!
   lowerMessage: |-
-      §8[§7§lPhantom§8]
-      §f§oThis server is just a broadcast!
+      &8[&7&lPhantom&8]
+      &f&oThis server is just a broadcast!
   upperMessage: This msg appears above the server!
 Style: 1
 configVersion: 1

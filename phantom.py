@@ -6,7 +6,7 @@
  @author: Thorin
  
  
- Version 0.3.0
+ Version 0.5.1
 """
 import socket
 import json
@@ -72,7 +72,7 @@ def JSON_Response(protocol_version):
     virtual_players = []
     print(virtual_Playernames)
     for playername in virtual_Playernames:
-        playerDict = {"name":playername,"id": "4566e69f-c907-48ee-8d71-d7ba5aa00d20"}
+        playerDict = {"name":fix_coloring(playername),"id": "4566e69f-c907-48ee-8d71-d7ba5aa00d20"}
         virtual_players.append(playerDict)
     
     max_players = 0
@@ -83,14 +83,14 @@ def JSON_Response(protocol_version):
         
     JSON = {
         "version" : {
-            "name":Content["upperMessage"],
+            "name":fix_coloring(Content["upperMessage"]),
             "protocol":protocol_version
             },
         "players": {
             "max": max_players,
             "online": 0,
             "sample" : virtual_players},
-        "description": Content["lowerMessage"],
+        "description": fix_coloring(Content["lowerMessage"]),
         "favicon": "data:image/png;base64" + base64_message
         }
     return JSON
@@ -101,7 +101,9 @@ host='localhost'
 port=25565
 timeout=5
 
-
+def fix_coloring(text):
+    #TODO add a \& option
+    return re.sub("&", "§", text)
 
 def read_handshake(conn):
     packet_length = unpack_varint(conn);
