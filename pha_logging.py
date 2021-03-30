@@ -8,7 +8,7 @@
 """
 from time import gmtime, strftime
 
-debug = True
+is_debug = False
 
 def list_to_string(alist):
     output = ""
@@ -28,7 +28,7 @@ def info(*msg):
     print("["+ strftime("%H:%M:%S", gmtime())+"]" + "  INFO",end_msg)
     
 def debug(*msg):
-    if debug:
+    if is_debug:
         print("["+ strftime("%H:%M:%S", gmtime())+"]" + " DEBUG",list_to_string(msg))
         
         
