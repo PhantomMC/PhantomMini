@@ -9,13 +9,13 @@
 import re
 import base64
 import json
-from pha_logging import send_message
+from pha_logging import info
 class json_creator:
     
     def __init__(self,config):
         self.Content = config["Content"]
         self.Style = config["Style"]
-        send_message("Loaded style",self.Style)
+        info("Loaded style",self.Style)
         self.load_base64()
         self.create_Response_dictionary()
         self.disconnect_dictionary = {"text":self.Content["kickMessage"]}

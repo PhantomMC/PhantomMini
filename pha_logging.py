@@ -23,7 +23,7 @@ def list_to_string(alist):
         output = output + " " + item
         
     return output
-def send_message(*msg):
+def info(*msg):
     end_msg = list_to_string(msg)
     print("["+ strftime("%H:%M:%S", gmtime())+"]" + "  INFO",end_msg)
     

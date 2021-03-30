@@ -7,7 +7,7 @@
  @author: Thorin
 """
 import struct
-from pha_logging import send_message,debug
+from pha_logging import info,debug
 
 class connection_manager:
     
@@ -19,12 +19,11 @@ class connection_manager:
         packet_length = self.unpack_varint();
         self.packet_id = self.unpack_varint() #TODO check if invalid
         self.protocol_version = self.unpack_varint()
-        string_length = self.unpack_varint()
-        self.client_address = conn.recv(string_length)
+        self.client_address = self.unpack_string()
         self.client_port = self.conn.recv(2)
         self.state = self.unpack_varint()
         
-        send_message("Connected to",self.client_address,"at port",self.client_port)
+        info("Connected to",self.client_address,"at port",self.client_port)
     def pack_varint(self,data):
          """ Pack the var int """
          ordinal = b''
@@ -37,6 +36,10 @@ class connection_manager:
                  break
     
          return ordinal
+     
+    def unpack_string(self):
+        string_length = self.unpack_varint()
+        return self.conn.recv(string_length)
     def pack_string(self,astring):
         data = astring.encode('utf8')
         return self.pack_varint(len(data)) + data
@@ -88,7 +91,13 @@ class connection_manager:
                 self.conn.sendall(self.pack_varint(len(data)) + data)
                 debug("Responded to ping.")
                 break
-            
+    
+    def interpret_login(self):
+        packet_length = self.unpack_varint()
+        self.packet_id = self.unpack_varint()
+        self.username = self.unpack_string()
+        info(self.username , "tried to establish a connection")
+    
     def compile_disconnect_data(self):
         chat_data = self.pack_string(self.json_creator.get_disconnect_dictionary_string())
         full_data = b'\x00' + chat_data
@@ -96,7 +105,7 @@ class connection_manager:
     
     
     def login_connection(self):
-        recieved_data = self.read_fully()
+        recieved_data = self.interpret_login()
         debug("Recieved",str(recieved_data))
         final_data = self.compile_disconnect_data();
         debug("Sent JSON disconnect message")

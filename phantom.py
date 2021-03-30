@@ -10,7 +10,7 @@ import yaml
 import os
 from connection_manager import connection_manager
 from json_creator import json_creator
-from pha_logging import send_message,logger,debug
+from pha_logging import info,logger,debug
 from os import path
 
 
@@ -59,7 +59,7 @@ class phantom:
         if path.exists("config.yml"):
             return self.load_config()
         else:
-            send_message("No config was found, provididing a shittier one")
+            info("No config was found, provididing a shittier one")
             self.write_config()
             return False
             
@@ -76,7 +76,7 @@ class phantom:
         return False
             
     def rename_config(self):
-        send_message("Providing you with a newer config")
+        info("Providing you with a newer config")
         if path.exists("config.old"):
             os.remove("config.old")
         os.rename("config.yml", "config.old")
@@ -107,7 +107,6 @@ class phantom:
                 s.listen(1)
                 conn, addr = s.accept()
                 self.connection_actions(conn)
-                debug("Closing connection...")
         finally:
             s.close()
     
