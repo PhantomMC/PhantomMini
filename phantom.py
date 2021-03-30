@@ -15,7 +15,7 @@ from os import path
 
 
 
-Version = "0.5.3"
+Version = "0.5.2"
 
 defaultConfig = {
         "configVersion" : 4,
