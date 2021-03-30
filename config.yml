@@ -25,7 +25,7 @@
 
 
 # Version of this config. Please do not change.
-configVersion: 3
+configVersion: 4
 
 # Where do you want phantom to run?
 serverInfo:
@@ -33,7 +33,7 @@ serverInfo:
     port: 25565
 
 # What should the broadcast sent to players look like (number from one to three)?
-Style: 1
+Style: 3
 # Option One:
 #                          Upper Message ꖦ
 # ████ Lower Message     ⡏ Hover Message ⢹
@@ -55,9 +55,9 @@ Content:
     lowerMessage: |-
       &8[&7&lPhantom&8]
       &f&oThis server is just a broadcast!
-    # Text shown above the server (Max ? Chars.)
-    upperMessage: &fThis msg appears above the server!
-    # This text will appear when someone hovers over the server's status indicator (max 5 ?char lines)
+    # Text shown above the server
+    upperMessage: '&fThis msg appears above the server!'
+    # This text will appear when someone hovers over the server's status indicator 
     hoverMessage: |-
       &7[&f&lPhantom&7]
       &bThis is some example text
@@ -65,6 +65,22 @@ Content:
       &3I think at least.
     # What text is sent to users who try to connect to the server? (no spacebars or coloring accepted)
     kickMessage: |-
-      Players_will_be_kicked_with_this message!
+      Players &7ill be kicked w
+      ith &7his message!hkalflk
+      jjjjjjjjjjjkkkkk&1kkkkkkkk
     # Where can we find a 64x64 pixel png image?
-    imagePath: server-icon.png
+    imagePath: 'server-icon.png'
+    # Text shown above the server (Max 29 Chars.)
+    
+Logging:
+    # Users that view the server's MOTD.
+    pings:
+        # Generates an entry each time a ping occurs; pings.log
+        log: false
+    # Users that view the server's Kick Message.
+    connections:
+        # Generates a list of unique users; joins.csv
+        list: true
+        # Generates a list of unique users; joins.log
+        log: false
+
