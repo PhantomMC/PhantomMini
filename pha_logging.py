@@ -6,6 +6,7 @@
  
  @author: Thorin
 """
+from time import gmtime, strftime
 
 debug = True
 
@@ -16,7 +17,7 @@ def list_to_string(alist):
             try:
                 item = item.decode("utf8")
             except:
-                item = "None"
+                item = str(item)
         elif type(item) is not str:
             item = str(item)
         output = output + " " + item
@@ -24,11 +25,11 @@ def list_to_string(alist):
     return output
 def send_message(*msg):
     end_msg = list_to_string(msg)
-    print("[PhantomServer]",end_msg)
+    print("["+ strftime("%H:%M:%S", gmtime())+"]" + " INFO",end_msg)
     
 def debug(*msg):
     if debug:
-        print("[PhantomDebug]",list_to_string(msg))
+        print("["+ strftime("%H:%M:%S", gmtime())+"]" + " DEBUG",list_to_string(msg))
         
         
 class logger:

@@ -78,12 +78,15 @@ class connection_manager:
     def status_connection(self):
         while True:
             data = self.read_fully()
+            debug("Recieved",str(data))
             if data == b'\x00':
                 self.conn.sendall(self.write_response())
+                debug("Sent JSON response")
             elif data == b'':
                 break
             else:
                 self.conn.sendall(self.pack_varint(len(data)) + data)
+                debug("Responded to ping.")
                 break
             
     def compile_disconnect_data(self):
@@ -94,7 +97,8 @@ class connection_manager:
     
     def login_connection(self):
         recieved_data = self.read_fully()
-        
+        debug("Recieved",str(recieved_data))
         final_data = self.compile_disconnect_data();
-        
+        debug("Sent JSON disconnect message")
         self.conn.sendall(final_data)
+        

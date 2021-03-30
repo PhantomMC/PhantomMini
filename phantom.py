@@ -10,7 +10,7 @@ import yaml
 import os
 from connection_manager import connection_manager
 from json_creator import json_creator
-from pha_logging import send_message,logger
+from pha_logging import send_message,logger,debug
 from os import path
 
 
@@ -107,7 +107,7 @@ class phantom:
                 s.listen(1)
                 conn, addr = s.accept()
                 self.connection_actions(conn)
-            
+                debug("Closing connection...")
         finally:
             s.close()
     
