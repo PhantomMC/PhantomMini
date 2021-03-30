@@ -8,14 +8,14 @@
 import socket
 import yaml
 import os
-from connection_manager import connection_manager
-from json_creator import json_creator
+from pha_connection import connection_manager
+from pha_json import json_creator
 from pha_logging import info,logger,debug
 from os import path
 
 
 
-Version = "0.5.4"
+Version = "0.5.5"
 
 defaultConfig = {
         "configVersion" : 4,
