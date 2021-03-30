@@ -25,7 +25,7 @@ def list_to_string(alist):
     return output
 def send_message(*msg):
     end_msg = list_to_string(msg)
-    print("["+ strftime("%H:%M:%S", gmtime())+"]" + " INFO",end_msg)
+    print("["+ strftime("%H:%M:%S", gmtime())+"]" + "  INFO",end_msg)
     
 def debug(*msg):
     if debug:
