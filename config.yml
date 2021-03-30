@@ -61,8 +61,10 @@ Content:
     hoverMessage: |-
       &7[&f&lPhantom&7]
       &bThis is some example text
-      &3It can be as long and wide as you want.
-      &3Only limitation is the size of the screen.
+      &3It can be as long and wide
+      &3as you want. The Only 
+      &3limitation is the size of
+      &3the screen.
     # What text is sent to users who try to connect to the server? (no coloring accepted)
     kickMessage: |-
       Players will be kicked with 
