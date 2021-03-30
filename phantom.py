@@ -4,16 +4,18 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
  @author: Thorin
- 
- 
- Version 0.5.3
 """
 import socket
 import yaml
 import os
 from connection_manager import connection_manager
 from json_creator import json_creator
+from pha_logging import send_message,logger
+from os import path
 
+
+
+Version = "0.5.3"
 
 defaultConfig = {
         "configVersion" : 4,
@@ -39,43 +41,58 @@ defaultConfig = {
         }
 
 
-
-
-
-
-
-
 class phantom:
     def __init__(self):
+        self.logger = logger(Version)
         while not self.get_config():
             continue
         self.json_creator = json_creator(self.config)
         self.host = self.config["serverInfo"]["host"]
         self.port = self.config["serverInfo"]["port"]
-    
     """
     @return True if successfull, False otherwise
     """
+    
+    
+    
     def get_config(self):
+        if path.exists("config.yml"):
+            return self.load_config()
+        else:
+            send_message("No config was found, provididing a shittier one")
+            self.write_config()
+            return False
+            
+    def load_config(self):
         try:
             config_file = open("config.yml",encoding='utf8')
             self.config = yaml.safe_load(config_file)
+            config_file.close()
             if(self.config["configVersion"] != defaultConfig["configVersion"]):
-                print("Providing you with a newer config")
-                os.rename("config.yml", "oldConfig.yml")
-                return False
-            print("Succesfully loaded config")
-            config_file.close()
+                return self.rename_config()
             return True
-        except IOError:
-            config_file = open("config.yml","w+")
-            print("No config was found, provididing a shittier one")
-            config_file.write(yaml.dump(defaultConfig))
+        except:
             config_file.close()
+        return False
+            
+    def rename_config(self):
+        send_message("Providing you with a newer config")
+        if path.exists("config.old"):
+            os.remove("config.old")
+        os.rename("config.yml", "config.old")
+        return self.write_config()
+            
+    def write_config(self):
+        try:
+            config_file = open("config.yml","w+")
+            config_file.write(yaml.dump(defaultConfig))
+        except:
+            config_file.close()
+            return False
         finally:
             config_file.close()
-            
-        return False
+        return True
+    
     def connection_actions(self,conn):
         try:
             conn_mngr = connection_manager(conn,self.json_creator)
@@ -100,4 +117,8 @@ class phantom:
 
 
 phantomServer = phantom()
-phantomServer.start()
+
+try:
+    phantomServer.start()
+except KeyboardInterrupt:
+    1

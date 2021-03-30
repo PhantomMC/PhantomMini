@@ -7,6 +7,8 @@
  @author: Thorin
 """
 import struct
+from pha_logging import send_message,debug
+
 class connection_manager:
     
     def __init__(self,conn,ajson_creator):
@@ -19,8 +21,10 @@ class connection_manager:
         self.protocol_version = self.unpack_varint()
         string_length = self.unpack_varint()
         self.client_address = conn.recv(string_length)
-        self.client_port = conn.recv(2)
+        self.client_port = self.conn.recv(2)
         self.state = self.unpack_varint()
+        
+        send_message("Connected to",self.client_address,"at port",self.client_port)
     def pack_varint(self,data):
          """ Pack the var int """
          ordinal = b''
