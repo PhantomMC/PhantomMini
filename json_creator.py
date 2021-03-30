@@ -15,7 +15,7 @@ class json_creator:
     def __init__(self,config):
         self.Content = config["Content"]
         self.Style = config["Style"]
-        print("Style=",config["Style"])
+        print("Loaded style",self.Style)
         self.load_base64()
         self.create_Response_dictionary()
         self.disconnect_dictionary = {"text":self.Content["kickMessage"]}
@@ -37,7 +37,6 @@ class json_creator:
         virtual_Playernames = re.split("\n", self.Content["hoverMessage"])
         
         virtual_players = []
-        print("playernames:",virtual_Playernames)
         for playername in virtual_Playernames:
             playerDict = {"name":self.fix_coloring(playername),"id": "4566e69f-c907-48ee-8d71-d7ba5aa00d20"}
             virtual_players.append(playerDict)

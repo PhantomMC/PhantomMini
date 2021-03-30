@@ -11,7 +11,6 @@ class connection_manager:
     
     def __init__(self,conn,ajson_creator):
         self.json_creator = ajson_creator
-        print(self.json_creator.Style)
         self.conn = conn
         
         #recieve handshake
@@ -41,7 +40,6 @@ class connection_manager:
     def write_response(self):
         self.json_creator.change_Response_dictionary(self.protocol_version)
         response = b'\x00' + self.pack_string(self.json_creator.get_JSON_string())
-        print(response)
         return  self.pack_varint(len(response)) + response
     
     def unpack_varint(self):
@@ -58,7 +56,6 @@ class connection_manager:
 
             if not byte & 0x80:
                 break
-        print(data)
         return data
     
     def read_fully(self):
@@ -77,30 +74,23 @@ class connection_manager:
     def status_connection(self):
         while True:
             data = self.read_fully()
-            print("Recieved:",data)
             if data == b'\x00':
                 self.conn.sendall(self.write_response())
-                print("Sent: ", self.write_response())
             elif data == b'':
                 break
             else:
                 self.conn.sendall(self.pack_varint(len(data)) + data)
-                print("Sending",self.pack_varint(len(data))+data)
                 break
             
     def compile_disconnect_data(self):
         chat_data = self.pack_string(self.json_creator.get_disconnect_dictionary_string())
         full_data = b'\x00' + chat_data
-        print(full_data)
         return self.pack_varint(len(full_data)) + full_data
     
     
     def login_connection(self):
         recieved_data = self.read_fully()
         
-        print(recieved_data)
-        
         final_data = self.compile_disconnect_data();
         
-        print("final_data: ",final_data)
         self.conn.sendall(final_data)

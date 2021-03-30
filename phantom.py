@@ -13,6 +13,8 @@ import yaml
 import os
 from connection_manager import connection_manager
 from json_creator import json_creator
+
+
 defaultConfig = {
         "configVersion" : 4,
         "serverInfo" : {
@@ -32,19 +34,15 @@ defaultConfig = {
             "connections" : {
                 "list" : True,
                 "log" : False
+                }
+            }
         }
-    }
-}
 
 
 
 
 
 
-    
-host='localhost'
-port=25565
-timeout=5
 
 
 class phantom:
@@ -52,6 +50,8 @@ class phantom:
         while not self.get_config():
             continue
         self.json_creator = json_creator(self.config)
+        self.host = self.config["serverInfo"]["host"]
+        self.port = self.config["serverInfo"]["port"]
     
     """
     @return True if successfull, False otherwise
@@ -61,11 +61,11 @@ class phantom:
             config_file = open("config.yml",encoding='utf8')
             config_file
             self.config = yaml.safe_load(config_file)
-            print(self.config)
             if(self.config["configVersion"] != defaultConfig["configVersion"]):
                 print("Providing you with a newer config")
                 os.renames("config.yml", "oldConfig.yml")
                 return False
+            print("Succesfully loaded config")
             config_file.close()
             return True
         except IOError:
@@ -86,7 +86,7 @@ class phantom:
     def start(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            s.bind((host, port))
+            s.bind((self.host, self.port))
             while True:
                 s.listen(1)
                 conn, addr = s.accept()

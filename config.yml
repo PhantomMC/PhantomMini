@@ -33,7 +33,7 @@ serverInfo:
     port: 25565
 
 # What should the broadcast sent to players look like (number from one to three)?
-Style: 3
+Style: 1
 # Option One:
 #                          Upper Message ꖦ
 # ████ Lower Message     ⡏ Hover Message ⢹
@@ -61,17 +61,17 @@ Content:
     hoverMessage: |-
       &7[&f&lPhantom&7]
       &bThis is some example text
-      &3It can be five lines long.
-      &3I think at least.
-    # What text is sent to users who try to connect to the server? (no spacebars or coloring accepted)
+      &3It can be as long and wide as you want.
+      &3Only limitation is the size of the screen.
+    # What text is sent to users who try to connect to the server? (no coloring accepted)
     kickMessage: |-
-      Players &7ill be kicked w
-      ith &7his message!hkalflk
-      jjjjjjjjjjjkkkkk&1kkkkkkkk
+      Players will be kicked with 
+      this message!
     # Where can we find a 64x64 pixel png image?
     imagePath: 'server-icon.png'
     # Text shown above the server (Max 29 Chars.)
     
+#NOT implemented yet
 Logging:
     # Users that view the server's MOTD.
     pings:
