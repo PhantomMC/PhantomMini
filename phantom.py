@@ -59,7 +59,6 @@ class phantom:
     def get_config(self):
         try:
             config_file = open("config.yml",encoding='utf8')
-            config_file
             self.config = yaml.safe_load(config_file)
             if(self.config["configVersion"] != defaultConfig["configVersion"]):
                 print("Providing you with a newer config")
