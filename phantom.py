@@ -62,7 +62,7 @@ class phantom:
             self.config = yaml.safe_load(config_file)
             if(self.config["configVersion"] != defaultConfig["configVersion"]):
                 print("Providing you with a newer config")
-                os.renames("config.yml", "oldConfig.yml")
+                os.rename("config.yml", "oldConfig.yml")
                 return False
             print("Succesfully loaded config")
             config_file.close()
