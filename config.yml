@@ -25,7 +25,7 @@
 
 
 # Version of this config. Please do not change.
-configVersion: 4
+configVersion: 5
 
 # Where do you want phantom to run?
 serverInfo:
@@ -73,7 +73,7 @@ Content:
     imagePath: 'server-icon.png'
     # Text shown above the server (Max 29 Chars.)
     
-#NOT implemented yet
+
 Logging:
     # Users that view the server's MOTD.
     pings:
@@ -86,3 +86,4 @@ Logging:
         # Generates a list of unique users; joins.log
         log: false
 
+debug: true

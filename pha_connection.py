@@ -7,14 +7,13 @@
  @author: Thorin
 """
 import struct
-from pha_logging import info,debug
 
 class connection_manager:
     
-    def __init__(self,conn,ajson_creator):
+    def __init__(self,conn,ajson_creator,logger):
         self.json_creator = ajson_creator
         self.conn = conn
-        
+        self.logger = logger
         #recieve handshake
         packet_length = self.unpack_varint();
         self.packet_id = self.unpack_varint() #TODO check if invalid
@@ -23,7 +22,7 @@ class connection_manager:
         self.client_port = self.conn.recv(2)
         self.state = self.unpack_varint()
         
-        info("Connected to",self.client_address,"at port",self.client_port)
+        self.logger.info("Connected to",self.client_address,"at port",struct.unpack("H", self.client_port))
     def pack_varint(self,data):
          """ Pack the var int """
          ordinal = b''
@@ -81,22 +80,22 @@ class connection_manager:
     def status_connection(self):
         while True:
             data = self.read_fully()
-            debug("Recieved",str(data))
+            self.logger.debug("Recieved",str(data))
             if data == b'\x00':
                 self.conn.sendall(self.write_response())
-                debug("Sent JSON response")
+                self.logger.debug("Sent JSON response")
             elif data == b'':
                 break
             else:
                 self.conn.sendall(self.pack_varint(len(data)) + data)
-                debug("Responded to ping.")
+                self.logger.debug("Responded to ping.")
                 break
     
     def interpret_login(self):
         packet_length = self.unpack_varint()
         self.packet_id = self.unpack_varint()
         self.username = self.unpack_string()
-        info(self.username , "tried to establish a connection")
+        self.logger.info(self.username , "tried to establish a connection")
     
     def compile_disconnect_data(self):
         chat_data = self.pack_string(self.json_creator.get_disconnect_dictionary_string())
@@ -106,8 +105,8 @@ class connection_manager:
     
     def login_connection(self):
         recieved_data = self.interpret_login()
-        debug("Recieved",str(recieved_data))
+        self.logger.debug("Recieved",str(recieved_data))
         final_data = self.compile_disconnect_data();
-        debug("Sent JSON disconnect message")
+        self.logger.debug("Sent JSON disconnect message")
         self.conn.sendall(final_data)
         

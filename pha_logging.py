@@ -7,8 +7,9 @@
  @author: Thorin
 """
 from time import gmtime, strftime
+import os
+from os import path
 
-is_debug = False
 
 def list_to_string(alist):
     output = ""
@@ -23,27 +24,57 @@ def list_to_string(alist):
         output = output + " " + item
         
     return output
-def info(*msg):
-    end_msg = list_to_string(msg)
-    print("["+ strftime("%H:%M:%S", gmtime())+"]" + "  INFO",end_msg)
-    
-def debug(*msg):
-    if is_debug:
-        print("["+ strftime("%H:%M:%S", gmtime())+"]" + " DEBUG",list_to_string(msg))
+
         
         
 class logger:
-    def __init__(self,version):
-        print("----------------------")
-        print("|   Phantom server   |")
-        print("|   Version " + version +"    |")
-        print("----------------------")
+    def __init__(self,version,config):
         
+        if not os.path.exists("log"):
+            os.mkdir("log")
+        
+        self.log_pings = config["Logging"]["pings"]["log"]
+        self.is_debug = config["debug"]
+        self.file_path = "log"
+        self.create_new_log()
+            
+        msg =   "----------------------\n" + "|   Phantom server   |\n"+"|   Version " + version +"    |\n"+"----------------------"
+        print (msg)
+        self.write_to_file(msg)
+        msg = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"
+        print(msg)
+        self.write_to_file(msg)
+        
+    def info(self,*msg):
+        end_msg = "["+ strftime("%H:%M:%S", gmtime())+" INFO ] " + list_to_string(msg)
+        
+        print(end_msg)
+        self.write_to_file(end_msg)
     
+    def debug(self,*msg):
+        if self.is_debug:
+            end_msg = "["+ strftime("%H:%M:%S", gmtime())+" Debug]" + list_to_string(msg)
+            self.write_to_file(end_msg)
+            print(end_msg)
+        
     def register_ping(self,client_port,client_address):
-        code = True
-    
+        self.debug("Connected to",client_address,"at port",client_port)
         
-
+        
+    def create_new_log(self):
+        if path.exists(self.file_path+"/pings.log"):
+            self.rename_old_log()
+    def rename_old_log(self):
+        i = 1
+        while path.exists(self.file_path+"/pings"+ str(i) +".old"):
+            i += 1
+        os.rename(self.file_path+"/pings.log", self.file_path+"/pings"+ str(i) +".old")
+        
+    def write_to_file(self,msg):
+        if not self.log_pings:
+            return
+        
+        with open(self.file_path + "/pings.log","a") as file:
+            file.writelines(msg + "\n")
     
     

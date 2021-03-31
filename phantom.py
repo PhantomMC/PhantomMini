@@ -10,7 +10,7 @@ import yaml
 import os
 from pha_connection import connection_manager
 from pha_json import json_creator
-from pha_logging import info,logger,debug
+from pha_logging import logger
 from os import path
 
 
@@ -18,7 +18,7 @@ from os import path
 Version = "0.5.5"
 
 defaultConfig = {
-        "configVersion" : 4,
+        "configVersion" : 5,
         "serverInfo" : {
             "host" : "localhost",
             "port" : 25565
@@ -37,16 +37,19 @@ defaultConfig = {
                 "list" : True,
                 "log" : False
                 }
-            }
+            },
+        "debug" : False
         }
 
 
 class phantom:
     def __init__(self):
-        self.logger = logger(Version)
+        
         while not self.get_config():
             continue
-        self.json_creator = json_creator(self.config)
+        
+        self.logger = logger(Version,self.config)
+        self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
         self.port = self.config["serverInfo"]["port"]
     """
@@ -59,7 +62,7 @@ class phantom:
         if path.exists("config.yml"):
             return self.load_config()
         else:
-            info("No config was found, provididing a shittier one")
+            print("No config was found, provididing a shittier one")
             self.write_config()
             return False
             
@@ -76,7 +79,7 @@ class phantom:
         return False
             
     def rename_config(self):
-        info("Providing you with a newer config")
+        print("Providing you with a newer config")
         if path.exists("config.old"):
             os.remove("config.old")
         os.rename("config.yml", "config.old")
@@ -95,7 +98,7 @@ class phantom:
     
     def connection_actions(self,conn):
         try:
-            conn_mngr = connection_manager(conn,self.json_creator)
+            conn_mngr = connection_manager(conn,self.json_creator,self.logger)
             conn_mngr.do_response()
         finally:
             conn.close()
