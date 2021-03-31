@@ -36,6 +36,9 @@ Version 0.0.0
         | |_ Feature Release (Adds a new feature)
         |_ Milestone Release (Adds a major feature from /PhantomServer/milestones)
 ```
+#### [Version 0.5.8]
+ - Stores logging information
+ - Added debug option in config
 #### [Version 0.5.5]
  - Propper logging information
  - Major refactor
