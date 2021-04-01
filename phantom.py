@@ -12,7 +12,7 @@ from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
 from os import path
-
+import asyncio
 
 
 Version = "0.5.8"
@@ -95,11 +95,12 @@ class phantom:
         finally:
             config_file.close()
         return True
-    
+    @asyncio.coroutine
     def connection_actions(self,conn):
         try:
             conn_mngr = connection_manager(conn,self.json_creator,self.logger)
             conn_mngr.do_response()
+            conn_mngr.register_event()
         finally:
             conn.close()
     def start(self):

@@ -8,6 +8,7 @@
 """
 from time import gmtime, strftime
 import os
+import struct
 from os import path
 
 
@@ -46,7 +47,7 @@ class logger:
         self.write_to_file(msg)
         
     def info(self,*msg):
-        end_msg = "["+ strftime("%H:%M:%S", gmtime())+" INFO ] " + list_to_string(msg)
+        end_msg = "["+ strftime("%H:%M:%S", gmtime())+" INFO ]" + list_to_string(msg)
         
         print(end_msg)
         self.write_to_file(end_msg)
@@ -57,9 +58,13 @@ class logger:
             self.write_to_file(end_msg)
             print(end_msg)
         
-    def register_ping(self,client_port,client_address):
-        self.debug("Connected to",client_address,"at port",client_port)
+    def register_user(self,client_port,client_address,client_username):
+        msg = "Registered action at adress " + client_address.decode("utf8") + " ,port " + str(struct.unpack("H", client_port))
         
+        if client_username is not None:
+            msg = msg + " with username " + client_username.decode("utf8")
+        
+        self.debug(msg)
         
     def create_new_log(self):
         if path.exists(self.file_path+"/pings.log"):
