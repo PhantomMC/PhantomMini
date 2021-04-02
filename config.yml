@@ -29,7 +29,7 @@ configVersion: 5
 
 # Where do you want phantom to run?
 serverInfo:
-    host: "localhost"
+    host: "LOCALHOST"
     port: 25565
 
 # What should the broadcast sent to players look like (number from one to three)?

@@ -11,6 +11,7 @@ import struct
 class connection_manager:
     
     def __init__(self,conn,ajson_creator,logger):
+        
         self.json_creator = ajson_creator
         self.conn = conn
         self.logger = logger
@@ -19,14 +20,14 @@ class connection_manager:
         self.packet_id = self.unpack_varint() #TODO check if invalid
         self.protocol_version = self.unpack_varint()
         self.client_address = self.unpack_string()
-        self.client_port = self.read(2)
+        self.client_port = self.read_data(2)
         self.state = self.unpack_varint()
         self.username = None
         self.logger.info("Connected to",self.client_address,"at port",struct.unpack("H", self.client_port))
         
-    def write(self,data):
+    def write_data(self,data):
         self.conn.sendall(data)
-    def read(self,length):
+    def read_data(self,length):
         return self.conn.recv(length)
         
     def pack_varint(self,data):
@@ -44,7 +45,7 @@ class connection_manager:
      
     def unpack_string(self):
         string_length = self.unpack_varint()
-        return self.read(string_length)
+        return self.read_data(string_length)
     def pack_string(self,astring):
         data = astring.encode('utf8')
         return self.pack_varint(len(data)) + data
@@ -58,7 +59,7 @@ class connection_manager:
         """ Unpack the varint """
         data = 0
         for i in range(5):
-            ordinal = self.read(1)
+            ordinal = self.read_data(1)
 
             if len(ordinal) == 0:
                 break
@@ -73,7 +74,7 @@ class connection_manager:
     def read_fully(self):
         """ Read the connection and return the bytes """
         packet_length = self.unpack_varint()
-        byte = self.read(packet_length)
+        byte = self.read_data(packet_length)
  
         return byte
     def do_response(self):
@@ -86,15 +87,15 @@ class connection_manager:
     def status_connection(self):
         while True:
             data = self.read_fully()
-            self.logger.debug("Recieved",str(data))
+            self.logger.debug("Recieved",data)
             if data == b'\x00':
-                self.write(self.write_response())
+                self.write_data(self.write_response())
                 self.logger.debug("Sent JSON response")
             elif data == b'':
                 break
             else:
-                self.write(self.pack_varint(len(data)) + data)
-                self.logger.debug("Responded to ping.")
+                self.write_data(self.pack_varint(len(data)) + data)
+                self.logger.debug("Responded to ping with:",data)
                 break
     
     def interpret_login(self):
@@ -113,7 +114,7 @@ class connection_manager:
         self.logger.debug("Recieved",str(recieved_data))
         final_data = self.compile_disconnect_data();
         self.logger.debug("Sent JSON disconnect message")
-        self.write(final_data)
+        self.write_data(final_data)
     
     def register_event(self):
         self.logger.register_user(self.client_port, self.client_address, self.username)

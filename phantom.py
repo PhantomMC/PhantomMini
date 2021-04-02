@@ -12,15 +12,14 @@ from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
 from os import path
-import asyncio
 
 
-Version = "0.5.10"
-
+Version = "0.5.11"
+is_micropython = False
 defaultConfig = {
         "configVersion" : 5,
         "serverInfo" : {
-            "host" : "localhost",
+            "host" : "51.222.28.81",
             "port" : 25565
         },
         "Style" : 1, #chose between 1, 2 and 3
@@ -68,13 +67,19 @@ class phantom:
             
     def load_config(self):
         try:
-            config_file = open("config.yml",encoding='utf8')
+            config_file = open("config.yml",encoding = "utf8")
+        except:#for micropython
+            config_file = open("config.yml")
+            is_micropython = True
+            
+        try:
             self.config = yaml.safe_load(config_file)
             config_file.close()
             if(self.config["configVersion"] != defaultConfig["configVersion"]):
                 return self.rename_config()
             return True
-        except:
+        except Exception as e:
+            print(e)
             config_file.close()
         return False
             

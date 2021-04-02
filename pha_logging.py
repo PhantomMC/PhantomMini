@@ -17,11 +17,12 @@ def list_to_string(alist):
     for item in alist:
         if type(item) is bytes:
             try:
-                item = item.decode("utf8")
+                item = str(item.decode("utf8"))
             except:
                 item = str(item)
         elif type(item) is not str:
             item = str(item)
+        
         output = output + " " + item
         
     return output
