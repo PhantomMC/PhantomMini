@@ -15,7 +15,7 @@ from os import path
 import asyncio
 
 
-Version = "0.5.10"
+Version = "0.5.9"
 
 defaultConfig = {
         "configVersion" : 5,
