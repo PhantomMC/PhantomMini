@@ -6,7 +6,7 @@
  
  @author: Thorin
 """
-from time import gmtime, strftime
+from time import strftime, localtime
 import os
 import struct
 from os import path
@@ -33,7 +33,8 @@ def generate_n_char(n,achar):
         
     return output
         
-        
+def write_time():
+    return strftime("%H:%M:%S", localtime())
 class logger:
     def __init__(self,version,config):
         
@@ -56,14 +57,14 @@ class logger:
         self.write_to_file(msg)
         
     def info(self,*msg):
-        end_msg = "["+ strftime("%H:%M:%S", gmtime())+" INFO ]" + list_to_string(msg)
+        end_msg = "["+ write_time() +" INFO ]" + list_to_string(msg)
         
         print(end_msg)
         self.write_to_file(end_msg)
     
     def debug(self,*msg):
         if self.is_debug:
-            end_msg = "["+ strftime("%H:%M:%S", gmtime())+" Debug]" + list_to_string(msg)
+            end_msg = "["+ write_time() +" Debug]" + list_to_string(msg)
             self.write_to_file(end_msg)
             print(end_msg)
         
