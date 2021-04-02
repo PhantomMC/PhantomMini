@@ -26,6 +26,12 @@ def list_to_string(alist):
         
     return output
 
+def generate_n_char(n,achar):
+    output = achar;
+    for i in range(n-1):
+        output = output+achar
+        
+    return output
         
         
 class logger:
@@ -38,8 +44,11 @@ class logger:
         self.is_debug = config["debug"]
         self.file_path = "log"
         self.create_new_log()
-            
-        msg =   "----------------------\n" + "|   Phantom server   |\n"+"|   Version " + version +"    |\n"+"----------------------"
+        row1 = "----------------------\n"
+        row2 = "|   Phantom server   |\n"
+        row3 = "|   Version " + version + generate_n_char(9-len(version)," ")+"|\n"
+        row4 = "----------------------"
+        msg =  row1 + row2 + row3 + row4
         print (msg)
         self.write_to_file(msg)
         msg = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"

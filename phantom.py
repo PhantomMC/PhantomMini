@@ -15,7 +15,7 @@ from os import path
 import asyncio
 
 
-Version = "0.5.8"
+Version = "0.5.10"
 
 defaultConfig = {
         "configVersion" : 5,
@@ -95,7 +95,6 @@ class phantom:
         finally:
             config_file.close()
         return True
-    @asyncio.coroutine
     def connection_actions(self,conn):
         try:
             conn_mngr = connection_manager(conn,self.json_creator,self.logger)
