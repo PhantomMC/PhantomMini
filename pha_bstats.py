@@ -37,14 +37,16 @@ class bstats:
     
     #main logic for sending data to bstats
     def run(self):
-        initial_delay = 1000*60*3*(1+random.uniform(0, 1)) # why not replace random with 1/2 ?? that has the same average effect
-        second_delay = 1000*60*30*(random.uniform(0, 1))
-        
+        initial_delay = 1000*60*3*(1+random.uniform(0, 1))
+        second_delay = 1000*60*30*(random.uniform(0, 1)) 
+        loop_delay = 1000*60*30
         #wait initial_delay
         
         #send data
         
-        #run a loop that sends data with a delay of second_delay
+        #wait second_delay + initial_delay
+        
+        #run a loop that sends data with a delay of loop_delay
         
     #metod used to innitiate sending data to bstats
     def start(self):
