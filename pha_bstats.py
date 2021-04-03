@@ -44,9 +44,7 @@ class bstats:
         
         #send data
         
-        #wait second_delay
-        
-        #send again
+        #run a loop that sends data with a delay of second_delay
         
     #metod used to innitiate sending data to bstats
     def start(self):
