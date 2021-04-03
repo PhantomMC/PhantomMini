@@ -7,7 +7,7 @@
 @author: Thorin, Erèsue
 """
 
-from random import uniform
+import random
 from platform import system, architecture, release
 from psutil import cpu_count
 
@@ -37,8 +37,8 @@ class bstats:
     
     #main logic for sending data to bstats
     def run(self):
-        initial_delay = 1000*60*3*(1+uniform(0, 1)) # why not replace random with 1/2 ?? that has the same average effect
-        second_delay = 1000*60*30*(uniform(0, 1))
+        initial_delay = 1000*60*3*(1+random.uniform(0, 1)) # why not replace random with 1/2 ?? that has the same average effect
+        second_delay = 1000*60*30*(random.uniform(0, 1))
         
         #wait initial_delay
         
