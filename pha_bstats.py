@@ -7,7 +7,9 @@
 @author: Thorin, Erèsue
 """
 
-import random
+from random import uniform
+from platform import system, architecture, release
+from psutil import cpu_count
 
 class bstats:
     def __init__(self,plugin_id,is_micropython):
@@ -18,11 +20,11 @@ class bstats:
         
     def create_bstat_dictionary(self):
         self.bstat_dict = {
-          "serverUUID": "20b9ee83-03b7-4769-9eba-2eb8aa866c1a",
-          "osName": "TestSystem",
-          "osArch": "Tester",
-          "osVersion": "5",
-          "coreCount": "1",
+          "serverUUID": self.server_UUID,
+          "osName": system(),
+          "osArch": architecture(),
+          "osVersion": release(),
+          "coreCount": cpu_count(),
           "plugins": [
             {
               "pluginName": "Phantom",
@@ -35,8 +37,8 @@ class bstats:
     
     #main logic for sending data to bstats
     def run(self):
-        initial_delay = 1000*60*3*(1+random.uniform(0, 1))
-        second_delay = 1000*60*30*(random.uniform(0, 1))
+        initial_delay = 1000*60*3*(1+uniform(0, 1))
+        second_delay = 1000*60*30*(uniform(0, 1))
         
         #wait initial_delay
         
