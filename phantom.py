@@ -128,4 +128,4 @@ phantomServer = phantom()
 try:
     phantomServer.start()
 except KeyboardInterrupt:
-    1
+    print("Stopped....")

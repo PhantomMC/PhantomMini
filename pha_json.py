@@ -56,6 +56,7 @@ class json_creator:
             "favicon": "data:image/png;base64" + self.base64_message
         }
         
+    
     def get_disconnect_dictionary_string(self):
         return json.dumps(self.disconnect_dictionary)
         
@@ -71,6 +72,7 @@ class json_creator:
         finally:
             binary_file.close()
             
+    
     
     def get_JSON_string(self):
         return json.dumps(self.response_dict)
