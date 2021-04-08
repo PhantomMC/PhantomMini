@@ -53,7 +53,7 @@ class json_creator:
                 "online": 0,
                 "sample" : virtual_players},
             "description": self.fix_coloring(self.Content["lowerMessage"]),
-            "favicon": "data:image/png;base64" + self.base64_message
+            "favicon": "data:image/png;base64," + self.base64_message
         }
         
     
