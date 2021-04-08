@@ -8,6 +8,7 @@
 import socket
 import yaml
 import os
+import asyncio
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
@@ -100,21 +101,19 @@ class phantom:
         finally:
             config_file.close()
         return True
-    def connection_actions(self,conn):
-        try:
-            conn_mngr = connection_manager(conn,self.json_creator,self.logger)
-            conn_mngr.do_response()
-            conn_mngr.register_event()
-        finally:
-            conn.close()
+    
     def start(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.bind((self.host, self.port))
+            i = 1
             while True:
                 s.listen(1)
                 conn, addr = s.accept()
-                self.connection_actions(conn)
+                conn_mngr = connection_manager(conn,self.json_creator,self.logger,i)
+                conn_mngr.run()
+                print("ping")
+                i += 1
         finally:
             s.close()
     
