@@ -111,9 +111,9 @@ class phantom:
                 s.listen(1)
                 conn, addr = s.accept()
                 conn_mngr = connection_manager(conn,self.json_creator,self.logger,i)
-                conn_mngr.run()
-                print("ping")
+                conn_mngr.start()
                 i += 1
+            print("Broke loop")
         finally:
             s.close()
     
