@@ -13,19 +13,23 @@ from psutil import cpu_count
 import threading
 import time
 import requests
+import uuid
+import json
+
 class bstats(threading.Thread):
     def __init__(self,plugin_id,is_micropython):
         threading.Thread.__init__(self)
-        self.uuid = self.generate_UUID()
         self.id = plugin_id
         self.create_bstat_dictionary()
         self.is_micropython = is_micropython
         
     def create_bstat_dictionary(self):
+        arch = architecture()
+        serverUUID = uuid.uuid1()
         self.bstat_dict = {
-          "serverUUID": self.server_UUID,
+          "serverUUID": serverUUID.__str__(),
           "osName": system(),
-          "osArch": architecture(),
+          "osArch": arch[1] +" " + arch[0],
           "osVersion": release(),
           "coreCount": cpu_count(),
           "plugins": [
@@ -33,15 +37,51 @@ class bstats(threading.Thread):
               "pluginName": "Phantom",
               "id": self.id,
               "pluginVersion": 0,
-              "customCharts": []
+              "customCharts": [
+                {
+                  "chartId": "pings",
+                  "data": [
+                    {
+                      "value": 6
+                    }
+                  ]
+                },
+                {
+                  "chartId": "joins",
+                  "data": [
+                    {
+                      "value": 3
+                    }
+                  ]
+                },
+                {
+                  "chartId": "logging",
+                  "data": [
+                    {
+                      "value": "all"
+                    }
+                  ]
+                },
+                {
+                  "chartId": "mode",
+                  "data": [
+                    {
+                      "value": "2"
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
     def send_data(self):
-        #send data to https://bstats.org/submitData/server-implementation
+        
         url = 'https://bstats.org/submitData/server-implementation'
-        res = requests.post(url, data=self.bstat_dict)
+        json_msg = json.dumps(self.bstat_dict)
+        print(json_msg)
+        res = requests.post(url, json=json_msg)
         print(res.text)
+        
     
     def run(self):
         initial_delay = 60*3*(1+random.uniform(0, 1))#seconds
@@ -55,11 +95,3 @@ class bstats(threading.Thread):
         while True:
             self.send_data()
             time.sleep(loop_delay)
-    def generate_UUID(self):
-        """
-        This is for serverUUID; it must be the same for every
-        request sent from a specific instance. A request sent
-        with a UUID that has already been used will be denied
-        unless it is sent from the same instance
-        """
-        self.server_UUID = "23b49a13-cc32-4d45-a9ce-e7e896c2ff43"
