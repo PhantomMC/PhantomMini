@@ -13,7 +13,7 @@ from pha_command import command_manager
 from pha_yaml import yaml_manager
 from pha_bstats import bstats
 
-Version = "0.6.1"
+Version = "0.7.0"
 defaultConfig = {
         "configVersion" : 6,
         "serverInfo" : {
@@ -49,10 +49,11 @@ class phantom:
         
         self.is_micropython = config_retriever.is_micropython
         
-        plugin_id = 10892
-        bstats(plugin_id, self.is_micropython).start()
         
         self.logger = logger(Version,self.config)
+        
+        plugin_id = 10892
+        bstats(plugin_id, self.is_micropython,self.logger).start()
         self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
         self.port = self.config["serverInfo"]["port"]

@@ -14,14 +14,14 @@ import threading
 import time
 import requests
 import uuid
-import json
 
 class bstats(threading.Thread):
-    def __init__(self,plugin_id,is_micropython):
+    def __init__(self,plugin_id,is_micropython,logger):
         threading.Thread.__init__(self)
         self.id = plugin_id
         self.create_bstat_dictionary()
         self.is_micropython = is_micropython
+        self.logger = logger
         
     def create_bstat_dictionary(self):
         arch = architecture()
@@ -77,10 +77,10 @@ class bstats(threading.Thread):
     def send_data(self):
         
         url = 'https://bstats.org/submitData/server-implementation'
-        json_msg = json.dumps(self.bstat_dict)
-        print(json_msg)
-        res = requests.post(url, json=json_msg)
-        print(res.text)
+        res = requests.post(url, json=self.bstat_dict)
+        self.logger.debug("Sen message to bstats")
+        if res.text == "":
+            pass #TODO idk, some errorprocessing
         
     
     def run(self):

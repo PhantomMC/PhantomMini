@@ -81,4 +81,4 @@ Logging:
     storeUsers: true
     
 
-debug: false
+debug: true
