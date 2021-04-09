@@ -30,13 +30,11 @@ defaultConfig = {
             "kickMessage" : "Angry",
             "imagePath" : "Logo.png"
         },
-        "Logging" : {
-            "pings" : { "log" : False },
-            "connections" : {
-                "list" : True,
-                "log" : False
-                }
-            },
+        "Logging" : 
+            {
+                "log" : False,
+                "storeUsers":True
+             },
         "debug" : False
         }
 
