@@ -9,10 +9,11 @@
 import struct
 import threading
 from time import sleep
-class connection_manager:
+class connection_manager(threading.Thread):
     
     def __init__(self,conn,ajson_creator,logger,threadID):
         
+        threading.Thread.__init__(self)
         self.threadID = threadID
         self.json_creator = ajson_creator
         self.conn = conn
@@ -92,7 +93,7 @@ class connection_manager:
             self.logger.debug("Recieved",data)
             if data == b'\x00':
                 self.write_data(self.write_response())
-                self.logger.debug("Sent JSON response: ", self.write_response())
+                self.logger.debug("Sent JSON response")
             elif data == b'':
                 break
             else:
@@ -123,6 +124,7 @@ class connection_manager:
         
     def run(self):
         try:
+            sleep(1)
             self.do_response()
             self.register_event()
         finally:
