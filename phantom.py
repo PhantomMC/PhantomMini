@@ -8,17 +8,16 @@
 import socket
 import yaml
 import os
-import asyncio
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
 from os import path
 from pha_command import command_manager
 
-Version = "0.5.11"
+Version = "0.6.1"
 is_micropython = False
 defaultConfig = {
-        "configVersion" : 5,
+        "configVersion" : 6,
         "serverInfo" : {
             "host" : "51.222.28.81",
             "port" : 25565
@@ -115,7 +114,7 @@ class phantom:
                 conn_mngr = connection_manager(conn,self.json_creator,self.logger,i)
                 conn_mngr.start()
                 i += 1
-            print("Broke loop")
+            print("This will never get triggered, but has to be here because of python")
         finally:
             s.close()
     

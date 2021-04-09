@@ -42,7 +42,7 @@ class logger:
         if not os.path.exists("log"):
             os.mkdir("log")
         
-        self.log_pings = config["Logging"]["pings"]["log"]
+        self.log_pings = config["Logging"]["log"]
         self.is_debug = config["debug"]
         self.file_path = "log"
         self.create_new_log()

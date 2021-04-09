@@ -25,7 +25,7 @@
 
 
 # Version of this config. Please do not change.
-configVersion: 5
+configVersion: 6
 
 # Where do you want phantom to run?
 serverInfo:
@@ -75,15 +75,10 @@ Content:
     
 
 Logging:
-    # Users that view the server's MOTD.
-    pings:
-        # Generates an entry each time a ping occurs; pings.log
-        log: false
-    # Users that view the server's Kick Message.
-    connections:
-        # Generates a list of unique users; joins.csv
-        list: true
-        # Generates a list of unique users; joins.log
-        log: false
+    # Store console messages
+    log: false
+    # Store every unique ip address and it's respective users
+    storeUsers: true
+    
 
 debug: true
