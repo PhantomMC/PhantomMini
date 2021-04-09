@@ -11,7 +11,7 @@ import threading
 from time import sleep
 class connection_manager(threading.Thread):
     
-    def __init__(self,conn,ajson_creator,logger,threadID):
+    def __init__(self,conn,ajson_creator,logger,threadID,addr):
         
         threading.Thread.__init__(self)
         self.threadID = threadID
@@ -22,11 +22,13 @@ class connection_manager(threading.Thread):
         packet_length = self.unpack_varint();
         self.packet_id = self.unpack_varint() #TODO check if invalid
         self.protocol_version = self.unpack_varint()
-        self.client_address = self.unpack_string()
-        self.client_port = self.read_data(2)
+        self.unpack_string()
+        self.read_data(2)
         self.state = self.unpack_varint()
         self.username = None
-        self.logger.info("Connected to",self.client_address,"at port",struct.unpack("H", self.client_port))
+        
+        self.client_address = addr[0]
+        self.client_port = addr[1]
         
     def write_data(self,data):
         self.conn.sendall(data)
@@ -105,7 +107,6 @@ class connection_manager(threading.Thread):
         packet_length = self.unpack_varint()
         self.packet_id = self.unpack_varint()
         self.username = self.unpack_string()
-        self.logger.info(self.username , "tried to establish a connection")
     
     def compile_disconnect_data(self):
         chat_data = self.pack_string(self.json_creator.get_disconnect_dictionary_string())

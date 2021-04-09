@@ -8,9 +8,8 @@
 """
 from time import strftime, localtime
 import os
-import struct
 from os import path
-
+from pha_yaml import yaml_manager
 
 def list_to_string(alist):
     output = ""
@@ -35,7 +34,9 @@ def generate_n_char(n,achar):
     return output
         
 def write_time():
-    return strftime("%H:%M:%S", localtime())
+    return strftime("%y.%m.%d@%H:%M", localtime())
+
+
 class logger:
     def __init__(self,version,config):
         
@@ -43,8 +44,17 @@ class logger:
             os.mkdir("log")
         
         self.log_pings = config["Logging"]["log"]
+        self.store_users = config["Logging"]["storeUsers"]
         self.is_debug = config["debug"]
         self.file_path = "log"
+        
+        if self.store_users:
+            default_yml = None
+            file_desti = "userList"
+            self.user_data_manager = yaml_manager(default_yml,file_desti)
+            self.user_data = self.user_data_manager.get_yml()
+            
+        
         self.create_new_log()
         row1 = "----------------------\n"
         row2 = "|   Phantom server   |\n"
@@ -56,24 +66,29 @@ class logger:
         self.write_to_file(msg)
         
     def info(self,*msg):
-        end_msg = "["+ write_time() +" INFO ]" + list_to_string(msg)
+        end_msg = write_time() + " [INFO]" + list_to_string(msg)
         
         print(end_msg)
         self.write_to_file(end_msg)
     
     def debug(self,*msg):
         if self.is_debug:
-            end_msg = "["+ write_time() +" Debug]" + list_to_string(msg)
+            end_msg = write_time() +" [DEBUG]" + list_to_string(msg)
             self.write_to_file(end_msg)
             print(end_msg)
         
     def register_user(self,client_port,client_address,client_username):
-        msg = "Registered action at adress " + client_address.decode("utf8") + " ,port " + str(struct.unpack("H", client_port))
+        msg = "from " + client_address + ":" + str(client_port)
         
         if client_username is not None:
-            msg = msg + " with username " + client_username.decode("utf8")
+            msg = "Connection as " + client_username.decode("utf8") +" "+ msg
+            self.info(msg)
+            return
         
-        self.debug(msg)
+        self.debug("Connection "+msg)
+        
+        
+        
         
     def create_new_log(self):
         if path.exists(self.file_path+"/pings.log"):
@@ -90,5 +105,6 @@ class logger:
         
         with open(self.file_path + "/pings.log","a") as file:
             file.writelines(msg + "\n")
+    
     
     

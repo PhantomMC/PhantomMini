@@ -6,16 +6,14 @@
  @author: Thorin
 """
 import socket
-import yaml
-import os
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
-from os import path
 from pha_command import command_manager
+from pha_yaml import yaml_manager
+from pha_bstats import bstats
 
 Version = "0.6.1"
-is_micropython = False
 defaultConfig = {
         "configVersion" : 6,
         "serverInfo" : {
@@ -41,73 +39,33 @@ defaultConfig = {
 
 class phantom:
     def __init__(self):
+        config_path = "config"
+        is_config = True
         
-        while not self.get_config():
-            continue
+        config_retriever = yaml_manager(defaultConfig,config_path,is_config)
+        self.config = config_retriever.get_yml()
+        
+        command_manager().start()
+        
+        self.is_micropython = config_retriever.is_micropython
+        
+        plugin_id = 10892
+        bstats(plugin_id, self.is_micropython).start()
         
         self.logger = logger(Version,self.config)
         self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
         self.port = self.config["serverInfo"]["port"]
         
-    """
-    @return True if successfull, False otherwise
-    """
-    def get_config(self):
-        if path.exists("config.yml"):
-            return self.load_config()
-        else:
-            print("No config was found, provididing a shittier one")
-            self.write_config()
-            return False
-            
-    def load_config(self):
-        try:
-            config_file = open("config.yml",encoding = "utf8")
-        except:#for micropython
-            config_file = open("config.yml")
-            is_micropython = True
-            
-        try:
-            self.config = yaml.safe_load(config_file)
-            config_file.close()
-            if(self.config["configVersion"] != defaultConfig["configVersion"]):
-                return self.rename_config()
-            return True
-        except Exception as e:
-            print(e)
-            config_file.close()
-        return False
-            
-    def rename_config(self):
-        print("Providing you with a newer config")
-        if path.exists("config.old"):
-            os.remove("config.old")
-        os.rename("config.yml", "config.old")
-        return self.write_config()
-            
-    def write_config(self):
-        try:
-            config_file = open("config.yml","w+")
-            config_file.write(yaml.dump(defaultConfig))
-        except:
-            config_file.close()
-            return False
-        finally:
-            config_file.close()
-        return True
-    
     def start(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.bind((self.host, self.port))
-            command_mngr = command_manager()
-            command_mngr.start()
             i = 1
             while True:
                 s.listen(1)
                 conn, addr = s.accept()
-                conn_mngr = connection_manager(conn,self.json_creator,self.logger,i)
+                conn_mngr = connection_manager(conn,self.json_creator,self.logger,i,addr)
                 conn_mngr.start()
                 i += 1
             print("This will never get triggered, but has to be here because of python")
@@ -115,9 +73,6 @@ class phantom:
             s.close()
     
     
-    
-    
-
 
 phantomServer = phantom()
 
