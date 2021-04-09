@@ -35,7 +35,12 @@ Version 0.0.0
         | | |_ Development Iteration (Changes the code in some way)
         | |_ Feature Release (Adds a new feature)
         |_ Milestone Release (Adds a major feature from /PhantomServer/milestones)
+        
 ```
+#### [Version 0.6.1]
+ - Async threading (not stresstested)
+ - Command interpretation (currently stop and exit)
+ - Fancier console messages
 #### [Version 0.5.8]
  - Stores logging information
  - Added debug option in config
