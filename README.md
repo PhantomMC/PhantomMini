@@ -37,6 +37,11 @@ Version 0.0.0
         |_ Milestone Release (Adds a major feature from /PhantomServer/milestones)
         
 ```
+#### [Version 0.7.0]
+ - Added bstats
+ - Some refactoring
+ - More solid looking console messages
+ - Added infastructure for upcomming userList.yml storage
 #### [Version 0.6.1]
  - Async threading (not stresstested)
  - Command interpretation (currently stop and exit)
