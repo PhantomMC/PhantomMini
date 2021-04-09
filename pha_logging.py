@@ -49,12 +49,10 @@ class logger:
         row1 = "----------------------\n"
         row2 = "|   Phantom server   |\n"
         row3 = "|   Version " + version + generate_n_char(9-len(version)," ")+"|\n"
-        row4 = "----------------------"
-        msg =  row1 + row2 + row3 + row4
+        row4 = "----------------------\n"
+        row5 = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"
+        msg =  row1 + row2 + row3 + row4 + row5
         print (msg)
-        self.write_to_file(msg)
-        msg = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"
-        print(msg)
         self.write_to_file(msg)
         
     def info(self,*msg):

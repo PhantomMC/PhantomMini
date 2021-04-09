@@ -33,7 +33,7 @@ serverInfo:
     port: 25565
 
 # What should the broadcast sent to players look like (number from one to three)?
-Style: 1
+Style: 2
 # Option One:
 #                          Upper Message ꖦ
 # ████ Lower Message     ⡏ Hover Message ⢹
@@ -81,4 +81,4 @@ Logging:
     storeUsers: true
     
 
-debug: true
+debug: false

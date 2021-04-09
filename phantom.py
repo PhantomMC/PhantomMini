@@ -49,12 +49,10 @@ class phantom:
         self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
         self.port = self.config["serverInfo"]["port"]
+        
     """
     @return True if successfull, False otherwise
     """
-    
-    
-    
     def get_config(self):
         if path.exists("config.yml"):
             return self.load_config()

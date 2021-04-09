@@ -15,6 +15,10 @@ class json_creator:
         self.Content = config["Content"]
         self.Style = config["Style"]
         self.load_base64()
+        self.UUIDlist = [
+            "d2b440c3-edde-4443-899e-6825c31d0919",
+            "b2957bef-7e6e-4872-b01e-6873034a535a"
+            ]
         self.create_Response_dictionary()
         self.disconnect_dictionary = {"text":self.Content["kickMessage"]}
     def fix_coloring(self,text):
@@ -35,9 +39,13 @@ class json_creator:
         virtual_Playernames = re.split("\n", self.Content["hoverMessage"])
         
         virtual_players = []
+        index = 0
         for playername in virtual_Playernames:
-            playerDict = {"name":self.fix_coloring(playername),"id": "4566e69f-c907-48ee-8d71-d7ba5aa00d20"}
+            if index >= len(self.UUIDlist):
+                index = 0
+            playerDict = {"name":self.fix_coloring(playername),"id": self.UUIDlist[index]}
             virtual_players.append(playerDict)
+            index += 1
         
         
         
