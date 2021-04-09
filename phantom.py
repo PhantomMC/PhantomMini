@@ -13,7 +13,7 @@ from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
 from os import path
-
+from pha_command import command_manager
 
 Version = "0.5.11"
 is_micropython = False
@@ -106,6 +106,8 @@ class phantom:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
             s.bind((self.host, self.port))
+            command_mngr = command_manager()
+            command_mngr.start()
             i = 1
             while True:
                 s.listen(1)
