@@ -24,7 +24,7 @@ To install MicroPython on a [SBM](https://en.wikipedia.org/wiki/Single-board_mic
 To install MicroPython for Mac, Slackware, or RHEL based systems, see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).<br />
 To install MicroPython for Windows, see [this guide](https://github.com/micropython/micropython/tree/master/ports/windows#building-under-cygwin)
 
-Once MicroPython has been installed, to run phantom, use `python phantom.py`
+**Once MicroPython has been installed, to run phantom, use `python phantom.py`**
 
 # Configuration
 The default config has been commented for clarity.
