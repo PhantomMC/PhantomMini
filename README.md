@@ -1,6 +1,6 @@
 # Description
 A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.html) program that responds to minecraft java clients' pings with a MOTD message and an icon.
-<br />Note that Phantom instances only *look* like a server; they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
+<br />Note that Phantom instances only *appear* as servers; by design, they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
 
 ### Features
 - Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico))
