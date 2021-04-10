@@ -16,7 +16,7 @@ A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.
 
 # Instructions
 ## Installing:
-This program was designed to be interpreted with [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />
+This program was designed to be interpreted with [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />. This is a subbranch which works with normal python, note that some features might be missing.
 ```diff
 - Phantom has primarily been tested on Debian-based systems... minimal support for non-UNIX systems.
  ```
