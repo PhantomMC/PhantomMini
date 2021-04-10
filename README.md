@@ -5,9 +5,11 @@ A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.
 Note that, by design, Phantom can not function as a playable/connectable server instance.
 
 ### Features
-- Extremely lightweight -- designed to be run on extreme low-end systems.
-- Customizable MOTD and server icon.
-- Customizable Port.
+- Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico))
+- Customizable Server icon, MOTD messages, MOTD overlay, and player list preview.
+- Customizable kick messages
+- Customizable port.
+- Options for statistics and logs.
 
 ## Background
 - This project was made to broadcast on the IP of a defunct (but formerly large) server.
@@ -17,17 +19,18 @@ Note that, by design, Phantom can not function as a playable/connectable server 
 # Instructions
 ## Installing:
 This is a python program designed to be interpreted via [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />
-Specifically, it has been tested on the [MicroPython Unix Port](http://docs.micropython.org/en/latest/unix/quickref.html).
+> Phantom has primarily been tested on Debian-based systems... minimal support for non-UNIX systems.
 
-To install MicroPython on Unix, see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).<br />
-To run this program, use `python phantom.py`
+To install MicroPython on most linux distros, see [this guide](https://www.raspberrypi.org/forums/viewtopic.php?p=1456736).<br />
+To install MicroPython on a [SBM](https://en.wikipedia.org/wiki/Single-board_microcontroller), see [this guide](https://docs.wemos.cc/en/latest/tutorials/w600/get_started_with_micropython_w600.html).<br />
+To install MicroPython for Mac, Slackware, or RHEL based systems, (https://en.wikipedia.org/wiki/Single-board_microcontroller), see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).<br />
+To install MicroPython for Windows, see [this guide](https://github.com/micropython/micropython/tree/master/ports/windows#building-under-cygwin)
+
+Once MicroPython has been installed, to run phantom, use `python phantom.py`
 
 # Configuration
-|Name|Type|Description|
---- | --- | ---
-|MOTD|STRING|generated from [this website](https://minecraft.tools/en/motd.php)|
-|image_link|string|path to a 64x64 pixel png file|
-|port|integer|The port from which Phantom will respond to clients requests.|
+The default config has been commented for clarity.
+You can find a copy of it [here](https://github.com/the-lockedcraft-legacy-organization/PhantomServer/blob/main/config.yml).
 
 # Changelog
 ```
