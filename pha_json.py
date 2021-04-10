@@ -8,7 +8,7 @@
 """
 import re
 import base64
-import json
+import ujson as json
 class json_creator:
     
     def __init__(self,config,logger):

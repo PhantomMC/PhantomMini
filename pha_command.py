@@ -17,3 +17,4 @@ class command_manager(threading.Thread):
                 break;
                 
         os._exit(1)
+    

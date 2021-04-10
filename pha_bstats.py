@@ -78,7 +78,7 @@ class bstats(threading.Thread):
         
         url = 'https://bstats.org/submitData/server-implementation'
         res = requests.post(url, json=self.bstat_dict)
-        self.logger.debug("Sen message to bstats")
+        self.logger.debug("Sent message to bstats")
         if res.text == "":
             pass #TODO idk, some errorprocessing
         

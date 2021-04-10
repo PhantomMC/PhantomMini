@@ -8,7 +8,8 @@
 """
 
 import os
-import yaml
+import uyaml as yaml
+
 class yaml_manager:
     def __init__(self,default_YML,file_desti,is_config = False):
         self.file_desti = file_desti

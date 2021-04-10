@@ -5,7 +5,7 @@
  
  @author: Thorin
 """
-import socket
+import usocket as socket
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
