@@ -16,7 +16,7 @@ A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.
 
 # Instructions
 ## Installing:
-This is a python program designed to be interpreted via [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />
+This program was designed to be interpreted with [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />
 > Phantom has primarily been tested on Debian-based systems... minimal support for non-UNIX systems.
 
 To install MicroPython on most linux distros, see [this guide](https://www.raspberrypi.org/forums/viewtopic.php?p=1456736).<br />
