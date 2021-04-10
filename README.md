@@ -2,7 +2,7 @@
 A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.html) program that responds to minecraft java clients' pings with a MOTD message and an icon.
 <br />As Phantom works by responding to [Server List Pings](https://wiki.vg/Server_List_Ping), it is designed to work on extreme low-end servers.
 
-Note that, by design, Phantom can not function as a playable/connectable server instance.
+Note that Phantom instances only *look* like a server; they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
 
 ### Features
 - Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico))
