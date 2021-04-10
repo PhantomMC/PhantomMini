@@ -19,7 +19,7 @@ A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.
 This program was designed to be interpreted with [MicroPython](https://github.com/micropython/micropython/blob/master/README.md).<br />
 > Phantom has primarily been tested on Debian-based systems... minimal support for non-UNIX systems.
 
-To install MicroPython on most linux distros, see [this guide](https://www.raspberrypi.org/forums/viewtopic.php?p=1456736).<br />
+**To install MicroPython on most linux distros, see [this guide](https://www.raspberrypi.org/forums/viewtopic.php?p=1456736).**<br /><br />
 To install MicroPython on a [SBM](https://en.wikipedia.org/wiki/Single-board_microcontroller), see [this guide](https://docs.wemos.cc/en/latest/tutorials/w600/get_started_with_micropython_w600.html).<br />
 To install MicroPython for Mac, Slackware, or RHEL based systems, see [this guide](https://github.com/micropython/micropython/wiki/Getting-Started#unix).<br />
 To install MicroPython for Windows, see [this guide](https://github.com/micropython/micropython/tree/master/ports/windows#building-under-cygwin)
