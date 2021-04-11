@@ -10,14 +10,14 @@
 import random
 from platform import system, architecture, release
 from psutil import cpu_count
-#import threading
+import threading
 import time
 import requests
 import uuid
 
-class bstats():
+class bstats(threading.Thread):
     def __init__(self,plugin_id,is_micropython,logger):
-        #threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.id = plugin_id
         self.create_bstat_dictionary()
         self.is_micropython = is_micropython
@@ -95,6 +95,3 @@ class bstats():
         while True:
             self.send_data()
             time.sleep(loop_delay)
-            
-    def start(self):
-        self.run()
