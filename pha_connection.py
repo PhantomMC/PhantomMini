@@ -7,13 +7,13 @@
  @author: Thorin
 """
 import struct
-#import threading
+import threading
 from time import sleep
-class connection_manager():
+class connection_manager(threading.Thread):
     
     def __init__(self,conn,ajson_creator,logger,threadID,addr):
         
-        #threading.Thread.__init__(self)
+        threading.Thread.__init__(self)
         self.threadID = threadID
         self.json_creator = ajson_creator
         self.conn = conn
@@ -130,5 +130,3 @@ class connection_manager():
             self.register_event()
         finally:
             self.conn.close()
-    def start(self):
-        self.run()
