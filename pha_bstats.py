@@ -31,6 +31,8 @@ class bstats(threading.Thread):
         release = systeminfo[2]
         version = systeminfo[3]
         machine = systeminfo[4]
+        
+        self.logger.debug("sysname",sysname,"release",release,"version",version,"machine",machine)
         serverUUID = uuid.uuid1()
         self.bstat_dict = {
           "serverUUID": serverUUID.__str__(),
