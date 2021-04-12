@@ -8,12 +8,14 @@
 """
 
 import random
-from platform import system, architecture, release
+import os
 from psutil import cpu_count
 import threading
 import time
 import requests
 import uuid
+
+
 
 class bstats(threading.Thread):
     def __init__(self,plugin_id,is_micropython,logger):
@@ -24,14 +26,18 @@ class bstats(threading.Thread):
         self.logger = logger
         
     def create_bstat_dictionary(self):
-        arch = architecture()
+        systeminfo = os.uname()
+        sysname = systeminfo[0]
+        release = systeminfo[2]
+        version = systeminfo[3]
+        machine = systeminfo[4]
         serverUUID = uuid.uuid1()
         self.bstat_dict = {
           "serverUUID": serverUUID.__str__(),
-          "osName": system(),
-          "osArch": arch[1] +" " + arch[0],
-          "osVersion": release(),
-          "coreCount": cpu_count(),
+          "osName": sysname,
+          "osArch": "Empty for now",
+          "osVersion": version,
+          "coreCount": machine,
           "plugins": [
             {
               "pluginName": "Phantom",
