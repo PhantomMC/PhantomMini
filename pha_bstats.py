@@ -9,7 +9,6 @@
 
 import random
 import os
-from psutil import cpu_count
 import threading
 import time
 import requests
