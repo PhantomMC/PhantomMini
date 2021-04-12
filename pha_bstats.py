@@ -11,7 +11,7 @@ import random
 import os
 import threading
 import time
-import requests
+import urequests as requests
 import uuid
 
 
