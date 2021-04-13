@@ -1,3 +1,6 @@
+
+> This project is a work in progress. The first working release will probably be posted in late April.
+
 # Description
 A lightweight [MicroPython](http://docs.micropython.org/en/latest/unix/quickref.html) program that responds to minecraft java clients' pings with a MOTD message and an icon.
 <br />Note that Phantom instances only *appear* as servers; by design, they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
