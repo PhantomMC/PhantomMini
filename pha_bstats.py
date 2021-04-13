@@ -14,6 +14,26 @@ import urequests as requests
 import uuid
 import ubinascii
 
+def randrange(start, stop=None):
+    if stop is None:
+        stop = start
+        start = 0
+    upper = stop - start
+    bits = 0
+    pwr2 = 1
+    while upper > pwr2:
+        pwr2 <<= 1
+        bits += 1
+    if bits == 0:
+        return start
+    while True:
+        r = getrandbits(bits)
+        if r < upper:
+            break
+    return r + start
+#generate a random real number between 0 and 1
+def random_double():
+    return randrange(0,1)
 
 class bstats(threading.Thread):
     def __init__(self,plugin_id,is_micropython,logger):
@@ -89,8 +109,8 @@ class bstats(threading.Thread):
         
     
     def run(self):
-        initial_delay = 60*3*(1+random.uniform(0, 1))#seconds
-        second_delay = 60*30*(random.uniform(0, 1)) 
+        initial_delay = 60*3*(1+random_double())#seconds
+        second_delay = 60*30*(random_double()) 
         loop_delay = 60*30
         
         time.sleep(initial_delay)
