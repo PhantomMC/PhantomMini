@@ -3,7 +3,6 @@
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
 @author: Thorin, Erèsue
 """
 
@@ -13,7 +12,7 @@ import threading
 import time
 import urequests as requests
 import uuid
-
+import ubinascii
 
 
 class bstats(threading.Thread):
@@ -25,14 +24,13 @@ class bstats(threading.Thread):
         self.logger = logger
         
     def create_bstat_dictionary(self):
-        systeminfo = os.uname()
+        #systeminfo = os.uname()
+        systeminfo = ["you", " are", " ", 1 , 4]
         sysname = systeminfo[0]
         release = systeminfo[2]
         version = systeminfo[3]
         machine = systeminfo[4]
-        
-        self.logger.debug("sysname",sysname,"release",release,"version",version,"machine",machine)
-        serverUUID = uuid.uuid1()
+        serverUUID = self.generate_uuid()
         self.bstat_dict = {
           "serverUUID": serverUUID.__str__(),
           "osName": sysname,
@@ -102,3 +100,27 @@ class bstats(threading.Thread):
         while True:
             self.send_data()
             time.sleep(loop_delay)
+    def generate_uuid(self):
+        """Generates a random UUID compliant to RFC 4122 pg.14"""
+        random = bytearray(os.urandom(16))
+        random[6] = (random[6] & 0x0F) | 0x40
+        random[8] = (random[8] & 0x3F) | 0x80
+        return UUID(bytes=random)
+        
+class UUID:
+    def __init__(self, bytes):
+        if len(bytes) != 16:
+            raise ValueError('bytes arg must be 16 bytes long')
+        self._bytes = bytes
+
+    @property
+    def hex(self):
+        return ubinascii.hexlify(self._bytes).decode()
+
+    def __str__(self):
+        h = self.hex
+        return '-'.join((h[0:8], h[8:12], h[12:16], h[16:20], h[20:32]))
+
+    def __repr__(self):
+        return "<UUID: %s>" % str(self)
+

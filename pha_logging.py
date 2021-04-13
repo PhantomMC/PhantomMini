@@ -39,13 +39,13 @@ def write_time():
 
 class logger:
     def __init__(self,version,config):
-        
+        print(config)
         if not os.path.exists("log"):
             os.mkdir("log")
         
         self.log_pings = config["Logging"]["log"]
-        self.store_users = config["Logging"]["storeUsers"]
-        self.is_debug = config["debug"]
+        self.store_users = bool(config["Logging"]["storeUsers"])
+        self.is_debug = bool(config["debug"])
         self.file_path = "log"
         
         if self.store_users:
@@ -104,7 +104,8 @@ class logger:
             return
         
         with open(self.file_path + "/pings.log","a") as file:
-            file.writelines(msg + "\n")
+            #file.writelines(msg + "\n")
+            pass
     
     
     

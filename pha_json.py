@@ -69,7 +69,9 @@ class json_creator:
         return json.dumps(self.disconnect_dictionary)
         
     def load_base64(self):
-        binary_file = open(self.Content["imagePath"],'rb')
+        filepath = self.Content["imagePath"]
+        print(filepath)
+        binary_file = open(filepath,'rb')
         
         try:
             binary_file_data = binary_file.read()

@@ -8,8 +8,7 @@
 """
 
 import os
-import uyaml as yaml
-
+import uyaml
 class yaml_manager:
     def __init__(self,default_YML,file_desti,is_config = False):
         self.file_desti = file_desti
@@ -32,9 +31,10 @@ class yaml_manager:
             self.is_micropython = True
             
         try:
-            self.yml_dictionary = yaml.safe_load(file)
+            self.yml_dictionary = self.load(file)
+            print(self.yml_dictionary)
             file.close()
-            if self.is_config and (self.yml_dictionary["configVersion"] != self.default_YML["configVersion"]):
+            if self.is_config and (int(self.yml_dictionary["configVersion"]) != self.default_YML["configVersion"]):
                 return self._rename_config()
             return True
         except Exception as e:
@@ -53,7 +53,7 @@ class yaml_manager:
     def write_yml(self,yml):
         try:
             file = open(self.file_desti + ".yml","w+")
-            file.write(yaml.dump(yml))
+            self.write(file,self.default_YML)
         except:
             file.close()
             return False
@@ -65,3 +65,9 @@ class yaml_manager:
         if not self._try_get_yml():
             return None
         return self.yml_dictionary
+    
+    def load(self,file_stream):
+        return uyaml.YamlParser(file_stream).parse()
+        
+    def write(self,afile,adictionary):
+        uyaml.dump(adictionary,afile)

@@ -61,7 +61,7 @@ class phantom:
     def start(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            s.bind((self.host, self.port))
+            s.bind((self.host,self.port))
             i = 1
             while True:
                 s.listen(1)
