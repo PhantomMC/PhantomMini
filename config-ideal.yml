@@ -75,10 +75,10 @@ Content:
     
 
 Logging:
-    # Store console messages
-    log: false
-    # Store every unique ip address and it's respective users
+    # Append all console messages to console.log
+    storeMessages: false
+    # List all players who have joined in players.log
     storeUsers: true
     
 
-debug: true
+debug: false

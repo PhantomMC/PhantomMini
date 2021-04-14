@@ -10,6 +10,6 @@ Content:
     kickMessage: "Players will be kicked with\nthis message!"
     imagePath: 'server-icon.png'
 Logging:
-    log: false
+    storeMessages: false
     storeUsers: true
 debug: true
