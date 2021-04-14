@@ -43,18 +43,18 @@ class logger:
         if not os.path.exists("log"):
             os.mkdir("log")
         
-        self.log_pings = config["Logging"]["log"]
-        self.store_users = bool(config["Logging"]["storeUsers"])
-        self.is_debug = bool(config["debug"])
-        self.file_path = "log"
+        load_config(config)
         
-        if self.store_users:
+        if self.is_store_users:
             default_yml = None
             file_desti = "userList"
             self.user_data_manager = yaml_manager(default_yml,file_desti)
             self.user_data = self.user_data_manager.get_yml()
             
+        print_ini_msg(version)
         
+        
+    def print_ini_msg(self,version):
         self.create_new_log()
         row1 = "----------------------\n"
         row2 = "|   Phantom server   |\n"
@@ -64,6 +64,13 @@ class logger:
         msg =  row1 + row2 + row3 + row4 + row5
         print (msg)
         self.write_to_file(msg)
+        
+    def load_config(self,config):
+        self.is_log_pings = bool(config["Logging"]["log"])
+        self.is_store_users = bool(config["Logging"]["storeUsers"])
+        self.is_debug = bool(config["debug"])
+        self.logfile_path = "log"
+        
         
     def info(self,*msg):
         end_msg = write_time() + " [INFO]" + list_to_string(msg)
@@ -87,9 +94,6 @@ class logger:
         
         self.debug("Connection "+msg)
         
-        
-        
-        
     def create_new_log(self):
         if path.exists(self.file_path+"/pings.log"):
             self.rename_old_log()
@@ -100,12 +104,19 @@ class logger:
         os.rename(self.file_path+"/pings.log", self.file_path+"/pings"+ str(i) +".old")
         
     def write_to_file(self,msg):
-        if not self.log_pings:
+        if not self.is_log_pings:
             return
         
         with open(self.file_path + "/pings.log","a") as file:
-            #file.writelines(msg + "\n")
+            file.write(msg + "\n")
             pass
+            
+        with open(self.file_path + "/testlog.log") as file:
+            preexisting_text = file.read()
+            end_text = preexisting_text + "\n" + msg
+            file.write(end_text)
+            
+            
     
     
     

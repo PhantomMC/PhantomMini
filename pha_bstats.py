@@ -102,7 +102,7 @@ class bstats(threading.Thread):
     def send_data(self):
         
         url = 'https://bstats.org/submitData/server-implementation'
-        res = requests.post(url, headers = {'content-type': 'application/json'}, data = self.bstat_dict)
+        res = requests.post(url,data = self.bstat_dict)
         self.logger.debug("Sent message to bstats")
         if res.text == "":
             pass #TODO idk, some errorprocessing
