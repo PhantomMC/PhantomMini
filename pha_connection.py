@@ -31,7 +31,7 @@ class connection_manager(threading.Thread):
         self.client_port = addr[1]
         
     def write_data(self,data):
-        self.conn.sendall(data)
+        self.conn.send(data)
     def read_data(self,length):
         return self.conn.recv(length)
         
@@ -97,10 +97,11 @@ class connection_manager(threading.Thread):
                 self.write_data(self.write_response())
                 self.logger.debug("Sent JSON response")
             elif data == b'':
+                self.logger.debug("Connection aborted by client")
                 break
             else:
                 self.write_data(self.pack_varint(len(data)) + data)
-                self.logger.debug("Responded to ping with:",data)
+                self.logger.debug("Responded to message with pong")
                 break
     
     def interpret_login(self):

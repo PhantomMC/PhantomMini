@@ -5,7 +5,7 @@
  
  @author: Thorin
 """
-import usocket as socket
+import socket
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
@@ -45,7 +45,7 @@ class phantom:
         config_retriever = yaml_manager(defaultConfig,config_path,is_config)
         self.config = config_retriever.get_yml()
         
-        command_manager().start()
+        #command_manager().start()
         
         self.is_micropython = config_retriever.is_micropython
         
@@ -56,12 +56,14 @@ class phantom:
         bstats(plugin_id, self.is_micropython,self.logger).start()
         self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
-        self.port = self.config["serverInfo"]["port"]
+        self.port = int(self.config["serverInfo"]["port"])
         
     def start(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.logger.debug("host:", self.host,"port",self.port)
+        addr_info = socket.getaddrinfo(self.host,self.port)
         try:
-            s.bind((self.host,self.port))
+            s.bind(addr_info[0][-1])
             i = 1
             while True:
                 s.listen(1)

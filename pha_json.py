@@ -13,7 +13,7 @@ class json_creator:
     
     def __init__(self,config,logger):
         self.Content = config["Content"]
-        self.Style = config["Style"]
+        self.Style = int(config["Style"])
         self.load_base64()
         self.UUIDlist = [
             "d2b440c3-edde-4443-899e-6825c31d0919",

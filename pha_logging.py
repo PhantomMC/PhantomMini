@@ -78,7 +78,7 @@ class logger:
             print(end_msg)
         
     def register_user(self,client_port,client_address,client_username):
-        msg = "from " + client_address + ":" + str(client_port)
+        msg = "from " + str(client_address) + ":" + str(client_port)
         
         if client_username is not None:
             msg = "Connection as " + client_username.decode("utf8") +" "+ msg

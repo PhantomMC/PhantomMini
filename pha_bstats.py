@@ -5,8 +5,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
 @author: Thorin, Erèsue
 """
-
-import random
+import ujson
 import os
 import threading
 import time
@@ -99,10 +98,11 @@ class bstats(threading.Thread):
             }
           ]
         }
+        self.bstats_json = ujson.dumps(self.bstat_dict)
     def send_data(self):
         
         url = 'https://bstats.org/submitData/server-implementation'
-        res = requests.post(url, json=self.bstat_dict)
+        res = requests.post(url, headers = {'content-type': 'application/json'}, data = self.bstat_dict)
         self.logger.debug("Sent message to bstats")
         if res.text == "":
             pass #TODO idk, some errorprocessing
