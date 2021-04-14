@@ -1,0 +1,15 @@
+configVersion: 7
+serverInfo:
+    host: "LOCALHOST"
+    port: 25565
+Style: 2
+Content:
+    lowerMessage: "&8[&7&lPhantom&8]\n&f&oThis server is just a broadcast!"
+    upperMessage: "&fThis msg appears above the server!"
+    hoverMessage: "&7[&f&lPhantom&7]\n&bThis is some example text\n&3It can be as long and wide\n&3as you want. The Only\n&3limitation is the size of\n&3the screen."
+    kickMessage: "Players will be kicked with\nthis message!"
+    imagePath: 'server-icon.png'
+Logging:
+    log: false
+    storeUsers: true
+debug: true
