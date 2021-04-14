@@ -25,11 +25,11 @@
 
 
 # Version of this config. Please do not change.
-configVersion: 6
+configVersion: 8
 
 # Where do you want phantom to run?
 serverInfo:
-    host: "LOCALHOST"
+    host: 0.0.0.0
     port: 25565
 
 # What should the broadcast sent to players look like (number from one to three)?
@@ -75,10 +75,10 @@ Content:
     
 
 Logging:
-    # Store console messages
-    log: false
-    # Store every unique ip address and it's respective users
+    # Append all console messages to console.log
+    storeMessages: false
+    # List all players who have joined in players.log
     storeUsers: true
     
 
-debug: true
+debug: false

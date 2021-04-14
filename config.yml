@@ -1,6 +1,6 @@
-configVersion: 7
+configVersion: 8
 serverInfo:
-    host: "LOCALHOST"
+    host: 0.0.0.0
     port: 25565
 Style: 2
 Content:
@@ -10,6 +10,6 @@ Content:
     kickMessage: "Players will be kicked with\nthis message!"
     imagePath: 'server-icon.png'
 Logging:
-    log: false
+    storeMessages: false
     storeUsers: true
 debug: true
