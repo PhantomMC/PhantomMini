@@ -11,6 +11,9 @@ import os
 from os import path
 from pha_yaml import yaml_manager
 
+
+logname = "console"
+
 def list_to_string(alist):
     output = ""
     for item in alist:
@@ -43,7 +46,7 @@ class logger:
         if not os.path.exists("log"):
             os.mkdir("log")
         
-        load_config(config)
+        self.load_config(config)
         
         if self.is_store_users:
             default_yml = None
@@ -51,10 +54,10 @@ class logger:
             self.user_data_manager = yaml_manager(default_yml,file_desti)
             self.user_data = self.user_data_manager.get_yml()
             
-        print_ini_msg(version)
+        self.print_ini_msg(version,config)
         
         
-    def print_ini_msg(self,version):
+    def print_ini_msg(self,version,config):
         self.create_new_log()
         row1 = "----------------------\n"
         row2 = "|   Phantom server   |\n"
@@ -66,10 +69,10 @@ class logger:
         self.write_to_file(msg)
         
     def load_config(self,config):
-        self.is_log_pings = bool(config["Logging"]["log"])
+        self.is_log_pings = bool(config["Logging"]["storeMessages"])
         self.is_store_users = bool(config["Logging"]["storeUsers"])
         self.is_debug = bool(config["debug"])
-        self.logfile_path = "log"
+        self.file_path = "log"
         
         
     def info(self,*msg):
@@ -95,27 +98,21 @@ class logger:
         self.debug("Connection "+msg)
         
     def create_new_log(self):
-        if path.exists(self.file_path+"/pings.log"):
+        if path.exists(self.file_path+"/"+logname+".log"):
             self.rename_old_log()
     def rename_old_log(self):
         i = 1
-        while path.exists(self.file_path+"/pings"+ str(i) +".old"):
+        while path.exists(self.file_path+"/"+logname+ str(i) +".old"):
             i += 1
-        os.rename(self.file_path+"/pings.log", self.file_path+"/pings"+ str(i) +".old")
+        os.rename(self.file_path+"/"+logname+".log", self.file_path+"/"+logname+ str(i) +".old")
         
     def write_to_file(self,msg):
         if not self.is_log_pings:
             return
         
-        with open(self.file_path + "/pings.log","a") as file:
+        with open(self.file_path + "/"+logname+".log","a") as file:
             file.write(msg + "\n")
             pass
-            
-        with open(self.file_path + "/testlog.log") as file:
-            preexisting_text = file.read()
-            end_text = preexisting_text + "\n" + msg
-            file.write(end_text)
-            
             
     
     

@@ -15,9 +15,9 @@ from pha_bstats import bstats
 
 Version = "0.7.0"
 defaultConfig = {
-        "configVersion" : 6,
+        "configVersion" : 8,
         "serverInfo" : {
-            "host" : "51.222.28.81",
+            "host" : "0.0.0.0",
             "port" : 25565
         },
         "Style" : 1, #chose between 1, 2 and 3
@@ -26,11 +26,11 @@ defaultConfig = {
             "upperMessage": "This msg appears above the server!",
             "hoverMessage" : "You should have brought a config",
             "kickMessage" : "Angry",
-            "imagePath" : "Logo.png"
+            "imagePath" : "server-icon.png"
         },
         "Logging" : 
             {
-                "log" : False,
+                "storeMessages" : False,
                 "storeUsers":True
              },
         "debug" : False
