@@ -8,19 +8,22 @@
 """
 
 import os
-import uyaml
+import refactor as uyaml
+
+
 class yaml_manager:
     def __init__(self,default_YML,file_desti,is_config = False):
         self.file_desti = file_desti
         self.is_config = is_config
         self.default_YML = default_YML
-        self.is_micropython = False
+        
     def _try_get_yml(self):
         if os.path.exists(self.file_desti + ".yml"):
             return self._load_yml()
         else:
             print("No " + self.file_desti + " was found, providing a new one")
             self.write_yml(self.default_YML)
+            
             return False
             
     def _load_yml(self):
@@ -28,13 +31,12 @@ class yaml_manager:
             file = open(self.file_desti + ".yml",encoding = "utf8")
         except:#for micropython
             file = open(self.file_desti + ".yml")
-            self.is_micropython = True
             
         try:
             self.yml_dictionary = self.load(file)
-            print(self.yml_dictionary)
             file.close()
             if self.is_config and (int(self.yml_dictionary["configVersion"]) != self.default_YML["configVersion"]):
+                print("Wrong version of config")
                 return self._rename_config()
             return True
         except Exception as e:
@@ -67,7 +69,8 @@ class yaml_manager:
         return self.yml_dictionary
     
     def load(self,file_stream):
-        return uyaml.YamlParser(file_stream).parse()
+        yaml_parser = uyaml.YamlParser(file_stream)
+        return yaml_parser.parse()
         
     def write(self,afile,adictionary):
-        uyaml.dump(adictionary,afile)
+        afile.write(uyaml.dump(adictionary))

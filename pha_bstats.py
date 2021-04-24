@@ -35,11 +35,10 @@ def random_double():
     return randrange(0,1)
 
 class bstats(threading.Thread):
-    def __init__(self,plugin_id,is_micropython,logger):
+    def __init__(self,plugin_id,logger):
         threading.Thread.__init__(self)
         self.id = plugin_id
         self.create_bstat_dictionary()
-        self.is_micropython = is_micropython
         self.logger = logger
         
     def create_bstat_dictionary(self):
