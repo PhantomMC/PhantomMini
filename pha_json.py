@@ -84,7 +84,6 @@ class json_creator:
         
     def load_base64(self):
         filepath = self.Content["imagePath"]
-        print(filepath)
         binary_file = open(filepath,'rb')
         
         try:
@@ -100,6 +99,4 @@ class json_creator:
     
     def get_JSON_string(self):
         msg = json.dumps(self.response_dict)
-        self.logger.debug("json_message:",msg)
-        self.logger.debug("saved_dictionary",self.response_dict)
         return msg

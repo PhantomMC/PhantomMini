@@ -9,7 +9,6 @@
 
 class YamlParser:
     def __init__(self,file):
-        print("init")
         self.linecount = 0
         self.allLines = file.readlines(  )
         self.block_type_switch = {
@@ -25,20 +24,14 @@ class YamlParser:
             }
         
     def parse_unknown_from_string(self, found_pos, type_starter, astring):
-        
-        print("parse_unknown_from_string")
         found_pos = 0
         (endpos, theChar) = self.find(astring, ",")
         if(endpos == -1):
             endpos = len(astring)
-        print("foundpos",found_pos,"endpos",endpos)
         endstring = astring[found_pos:endpos]
-        print("endstring:",endstring)
         return (endpos, YamlParser.trim(endstring))
     
     def parse_dict_from_string(self,found_pos, type_starter, astring):
-        
-        print("parse_dict_from_string")
         astring = astring[found_pos:]
         adict = {}
         endpos = 0
@@ -54,7 +47,6 @@ class YamlParser:
         return (endpos, adict)
             
     def parse_list_from_string(self,start_pos,type_starter,astring):
-        print("parse_list_from_string")
         astring = astring[start_pos:]
         alist = []
         endpos = 0
@@ -72,13 +64,11 @@ class YamlParser:
         return (endpos+1, alist)
         
     def parse_from_bracket(self,found_pos,type_starter,astring):
-        print("parse_from_bracket")
         astring = astring[(found_pos+1):]
         (endpos, foundchar) = self.find(astring,type_starter)
         return (endpos, astring[:endpos])
     
     def parse_type_from_string(self,astring):
-        print("parse_type_from_string")
         starter_identifiers = self.string_parse_switch.keys()
         (found_pos, first_found_char)= self.find(astring,starter_identifiers)
         data_decoder = self.string_parse_switch[first_found_char]
@@ -86,8 +76,6 @@ class YamlParser:
         return (endpos, data)
     
     def parseline(self,line):
-        print("parseline")
-        
         (indent, line) = self.calc_indent(line)
         atomic = ""
         commentpos = len(line)
@@ -101,7 +89,6 @@ class YamlParser:
                 atomic = char
                 continue
             if (char == "#") and (atomic == ""):
-                print("found # at pos", i)
                 commentpos = i
                 break
             if (char == "|") and (atomic == ""):
@@ -124,21 +111,16 @@ class YamlParser:
         return line[:exludingNewline]
         
     def parse_stringsection(self, target_indent):
-        print("parse_stringsection")
         endstring = ""
         while True:
             (indent, line) = self.parseline(self.readline())
             if(line == "") or indent != target_indent:
-                print("endstring:", endstring)
-                print("indent",indent,"target indent",target_indent)
                 return endstring
             if(endstring != ""):
                 endstring = endstring + "\n"
             endstring = endstring + line
-            print("onelap")
         
     def readlinesegment(self):
-        print("readlinesegment")
         linesegment = ""
         while(linesegment == ""):
             line = self.readline()
@@ -147,7 +129,6 @@ class YamlParser:
                 return 0
             (indent, linesegment) = self.parseline(line)
             
-        print("|" + linesegment + "|")
         self.currentLine = linesegment
         return indent
     
@@ -187,7 +168,6 @@ class YamlParser:
         
     def concat_linesegment(self,linesegment):
         (keyname, non_key_str) = self.simple_split(linesegment, ":")
-        print("Split:",keyname,"|",non_key_str)
         if (YamlParser.trim(non_key_str) == ""):
             indent = self.readlinesegment()
             block_type = self.detect_block_type(self.currentLine)
@@ -200,7 +180,6 @@ class YamlParser:
         return (keyname, block_data, endpos)
     
     def parse_list(self,target_indent):
-        print("parse_list")
         indent = target_indent
         end_list = []
         while self.currentLine.startswith("- ") and (indent == target_indent):
@@ -211,7 +190,6 @@ class YamlParser:
         return end_list
     
     def parse_block(self,target_indent):
-        print("parse_block")
         adict = {}
         
         indent = target_indent
@@ -219,14 +197,12 @@ class YamlParser:
             (keyname, data, endpos) = self.concat_linesegment(self.currentLine)
             adict[keyname] = data
             indent = self.readlinesegment()
-        print("exited block with dictionary:", adict)
         self.undreadline()
         return adict
         
     def parse(self):
         indent = self.readlinesegment()
         adict = self.parse_block(indent)
-        print("--------------")
         return adict
     
     

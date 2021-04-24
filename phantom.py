@@ -44,7 +44,6 @@ class phantom:
         
         config_retriever = yaml_manager(defaultConfig,config_path,is_config)
         self.config = config_retriever.get_yml()
-        print("config: ",self.config)
         #command_manager().start()
         
         self.logger = logger(Version,self.config)
