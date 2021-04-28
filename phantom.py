@@ -41,20 +41,17 @@ class phantom:
     def __init__(self):
         config_path = "config"
         is_config = True
-        
-        config_retriever = yaml_manager(defaultConfig,config_path,is_config)
+        config_retriever = yaml_manager(defaultConfig, config_path, is_config)
         self.config = config_retriever.get_yml()
         #command_manager().start()
         
         self.logger = logger(Version,self.config)
         
         plugin_id = 10892
-        bstats(plugin_id, self.logger).start()
+        bstats(plugin_id, self.logger, self.config).start()
         self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
         self.port = int(self.config["serverInfo"]["port"])
-        
-        self.logger.debug("hoverMessage:",self.config["Content"]["kickMessage"])
     def start(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.logger.debug("host:", self.host,"port",self.port)

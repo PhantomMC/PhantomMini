@@ -12,6 +12,7 @@ import time
 import urequests as requests
 import uuid
 import ubinascii
+import pha_connection
 
 def randrange(start, stop=None):
     if stop is None:
@@ -35,11 +36,14 @@ def random_double():
     return randrange(0,1)
 
 class bstats(threading.Thread):
-    def __init__(self,plugin_id,logger):
+    def __init__(self, plugin_id, logger, config):
         threading.Thread.__init__(self)
         self.id = plugin_id
         self.create_bstat_dictionary()
         self.logger = logger
+        self.config = config
+        self.host = config["serverInfo"]["host"]
+        self.port = int(config["serverInfo"]["port"])
         
     def create_bstat_dictionary(self):
         #systeminfo = os.uname()
@@ -99,14 +103,17 @@ class bstats(threading.Thread):
         }
         self.bstats_json = ujson.dumps(self.bstat_dict)
     def send_data(self):
+        url = 'http://bstats.org/submitData/server-implementation'
+
+        headers = {'X-AIO-Key': 'xxxxxxxxxxxxxxxxxxx',
+                   'Content-Type': 'application/json'}
+
+        data = ujson.dumps(self.bstat_dict)
+        self.logger.debug("sending bstats message...")
+        r = requests.post(url, data=data)
+        if(r != ""):
+            self.logger.error(r)
         
-        url = 'https://bstats.org/submitData/server-implementation'
-        res = requests.post(url,data = self.bstat_dict)
-        self.logger.debug("Sent message to bstats")
-        if res.text == "":
-            pass #TODO idk, some errorprocessing
-        
-    
     def run(self):
         initial_delay = 60*3*(1+random_double())#seconds
         second_delay = 60*30*(random_double()) 

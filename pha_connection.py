@@ -11,7 +11,7 @@ import threading
 from time import sleep
 class connection_manager(threading.Thread):
     
-    def __init__(self,conn,ajson_creator,logger,threadID,addr):
+    def __init__(self,conn,ajson_creator = None,logger = None,threadID = None,addr = ["",""]):
         
         threading.Thread.__init__(self)
         self.threadID = threadID

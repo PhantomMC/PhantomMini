@@ -9,7 +9,7 @@
 from time import strftime, localtime
 import os
 from os import path
-from pha_yaml import yaml_manager
+import pha_yaml
 
 
 logname = "console"
@@ -42,20 +42,26 @@ def write_time():
 
 class logger:
     def __init__(self,version,config):
-        print(config)
         if not os.path.exists("log"):
             os.mkdir("log")
-        
         self.load_config(config)
-        
         if self.is_store_users:
-            default_yml = None
+            default_yml = {}
             file_desti = "userList"
-            self.user_data_manager = yaml_manager(default_yml,file_desti)
+            self.user_data_manager = pha_yaml.yaml_manager(default_yml,file_desti)
+            print("ping1")
             self.user_data = self.user_data_manager.get_yml()
-            
+        print("ping6")
         self.print_ini_msg(version,config)
-        
+    
+    @staticmethod
+    def to_boolean(astring):
+        astring = astring.lower()
+        if(astring == "true"):
+            return True
+        if(astring == "false"):
+            return False
+        raise ValueError("Unable to convert string to boolean")
         
     def print_ini_msg(self,version,config):
         self.create_new_log()
@@ -65,28 +71,32 @@ class logger:
         row4 = "----------------------\n"
         row5 = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"
         msg =  row1 + row2 + row3 + row4 + row5
-        print (msg)
-        self.write_to_file(msg)
+        self.display_msg(msg)
         
     def load_config(self,config):
-        self.is_log_pings = bool(config["Logging"]["storeMessages"])
-        self.is_store_users = bool(config["Logging"]["storeUsers"])
-        self.is_debug = bool(config["debug"])
+        self.is_log_pings = self.to_boolean(config["Logging"]["storeMessages"])
+        self.is_store_users = self.to_boolean(config["Logging"]["storeUsers"])
+        self.is_debug = self.to_boolean(config["debug"])
         self.file_path = "log"
         
+    def display_msg(self, msg):
+        print(msg)
+        self.write_to_file(msg)
         
     def info(self,*msg):
         end_msg = write_time() + " [INFO]" + list_to_string(msg)
+        self.display_msg(end_msg)
         
-        print(end_msg)
-        self.write_to_file(end_msg)
     
     def debug(self,*msg):
         if self.is_debug:
             end_msg = write_time() +" [DEBUG]" + list_to_string(msg)
-            self.write_to_file(end_msg)
-            print(end_msg)
-        
+            self.display_msg(end_msg)
+    
+    def error(self, *msg):
+        end_msg = write_time() + " [ERROR]" + list_to_string(msg)
+        self.display_msg(end_msg)
+    
     def register_user(self,client_port,client_address,client_username):
         msg = "from " + str(client_address) + ":" + str(client_port)
         
