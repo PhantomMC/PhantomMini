@@ -22,12 +22,14 @@ class connection_manager(threading.Thread):
         packet_length = self.unpack_varint();
         self.packet_id = self.unpack_varint() #TODO check if invalid
         self.protocol_version = self.unpack_varint()
-        self.unpack_string()
+        print( self.unpack_string() )
         self.read_data(2)
         self.state = self.unpack_varint()
         self.username = None
         
+        
         self.client_address = addr[0]
+        print(addr[0])
         self.client_port = addr[1]
         
     def write_data(self,data):
