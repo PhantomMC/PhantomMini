@@ -28,13 +28,6 @@ def list_to_string(alist):
         output = output + " " + item
         
     return output
-
-def generate_n_char(n,achar):
-    output = achar;
-    for i in range(n-1):
-        output = output+achar
-        
-    return output
         
 def write_time():
     return strftime("%y.%m.%d@%H:%M", localtime())
@@ -64,13 +57,7 @@ class logger:
         raise ValueError("Unable to convert string to boolean")
         
     def print_ini_msg(self,version,config):
-        self.create_new_log()
-        row1 = "----------------------\n"
-        row2 = "|   Phantom server   |\n"
-        row3 = "|   Version " + version + generate_n_char(9-len(version)," ")+"|\n"
-        row4 = "----------------------\n"
-        row5 = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"
-        msg =  row1 + row2 + row3 + row4 + row5
+        msg = "<Initializing Phantom server Version " + version + ">"
         self.display_msg(msg)
         
     def load_config(self,config):
@@ -106,16 +93,7 @@ class logger:
             return
         
         self.debug("Connection "+msg)
-        
-    def create_new_log(self):
-        if path.exists(self.file_path+"/"+logname+".log"):
-            self.rename_old_log()
-    def rename_old_log(self):
-        i = 1
-        while path.exists(self.file_path+"/"+logname+ str(i) +".old"):
-            i += 1
-        os.rename(self.file_path+"/"+logname+".log", self.file_path+"/"+logname+ str(i) +".old")
-        
+    
     def write_to_file(self,msg):
         if not self.is_log_pings:
             return
@@ -123,7 +101,3 @@ class logger:
         with open(self.file_path + "/"+logname+".log","a") as file:
             file.write(msg + "\n")
             pass
-            
-    
-    
-    

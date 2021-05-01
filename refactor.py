@@ -113,7 +113,7 @@ class YamlParser:
     def parse_stringsection(self, target_indent):
         endstring = ""
         while True:
-            (indent, line) = self.parseline(self.readline())
+            (indent, line) = self.calc_indent(self.readline())
             if(line == "") or indent != target_indent:
                 return endstring
             if(endstring != ""):

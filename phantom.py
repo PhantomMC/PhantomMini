@@ -9,11 +9,13 @@ import socket
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
-from pha_command import command_manager
 from pha_yaml import yaml_manager
 from pha_bstats import bstats
+import threading
+import _thread
+import time
 
-Version = "0.7.0"
+Version = "0.7.12"
 defaultConfig = {
         "configVersion" : 8,
         "serverInfo" : {
@@ -37,43 +39,73 @@ defaultConfig = {
         }
 
 
-class phantom:
+class pha_server(threading.Thread):
     def __init__(self):
         config_path = "config"
         is_config = True
         config_retriever = yaml_manager(defaultConfig, config_path, is_config)
         self.config = config_retriever.get_yml()
-        #command_manager().start()
-        
+        self.host = self.config["serverInfo"]["host"]
+        self.port = int(self.config["serverInfo"]["port"])
+        self.serverSocket = self.getServerSocket()
         self.logger = logger(Version,self.config)
+        self.json_creator = json_creator(self.config,self.logger)
         
         plugin_id = 10892
         bstats(plugin_id, self.logger, self.config).start()
-        self.json_creator = json_creator(self.config,self.logger)
-        self.host = self.config["serverInfo"]["host"]
-        self.port = int(self.config["serverInfo"]["port"])
-    def start(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.logger.debug("host:", self.host,"port",self.port)
-        addr_info = socket.getaddrinfo(self.host,self.port)
+        self.logger.debug("host:", self.host, "port", self.port)
+        
+    def getServerSocket(self):
+        tryAmount = 3
+        tryWait = 16 # s
+        for i in range(tryAmount):
+            try:
+                serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                addr_info = socket.getaddrinfo(self.host, self.port)
+                serverSocket.bind(addr_info[0][-1])
+                return serverSocket
+            except OSError:
+                print("Port is already in use")
+                time.sleep(tryWait)
+                tryWait *= 2
+        
+    def run(self):
         try:
-            s.bind(addr_info[0][-1])
             i = 1
             while True:
-                s.listen(1)
-                conn, addr = s.accept()
+                self.serverSocket.listen(1)
+                conn, addr = self.serverSocket.accept()
                 conn_mngr = connection_manager(conn,self.json_creator,self.logger,i,addr)
                 conn_mngr.start()
                 i += 1
             print("This will never get triggered, but has to be here because of python")
         finally:
-            s.close()
+            self.serverSocket.close()
+    def stop(self):
+        self.serverSocket.close()
     
-    
-
+class phantom:
+    def __init__(self):
+        self.startServer()
+        
+    def acceptCommands(self):
+        while(True):
+            command = input()
+            if (command.lower() == "stop") or ("exit" == command.lower()):
+                self.phantom_server.stop()
+                break;
+            if command.lower() is "restart":
+                print("<< restart is currently not implemented yet")
+                #self.phantom_server.stop
+                #self.startServer()
+                continue
+            
+            print("unknown command")
+        
+    def startServer(self):
+        self.phantom_server = pha_server()
+        self.phantom_server.start()
+        
+        
 phantomServer = phantom()
-
-try:
-    phantomServer.start()
-except KeyboardInterrupt:
-    print("Stopped....")
+phantomServer.acceptCommands()

@@ -80,7 +80,7 @@ class json_creator:
         
     
     def get_disconnect_dictionary_string(self):
-        return json.dumps(self.disconnect_dictionary)
+        return self.fix_text(json.dumps(self.disconnect_dictionary))
         
     def load_base64(self):
         filepath = self.Content["imagePath"]
