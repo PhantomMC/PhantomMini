@@ -15,7 +15,7 @@ import threading
 import _thread
 import time
 
-Version = "0.7.12"
+Version = "0.7.13"
 defaultConfig = {
         "configVersion" : 8,
         "serverInfo" : {
@@ -79,6 +79,8 @@ class pha_server(threading.Thread):
                 conn_mngr.start()
                 i += 1
             print("This will never get triggered, but has to be here because of python")
+        except Exception as e:
+            self.logger.error(e)
         finally:
             self.serverSocket.close()
     def stop(self):

@@ -10,9 +10,12 @@ from time import strftime, localtime
 import os
 from os import path
 import pha_yaml
+import refactor as yaml
 
 
 logname = "console"
+userlistname = "userList"
+logFolderName = "log"
 
 def list_to_string(alist):
     output = ""
@@ -22,6 +25,8 @@ def list_to_string(alist):
                 item = str(item.decode("utf8"))
             except:
                 item = str(item)
+        if type(item) is Exception:
+            item = type(item) + "\n" + item.args + "\n" + item
         elif type(item) is not str:
             item = str(item)
         
@@ -35,16 +40,14 @@ def write_time():
 
 class logger:
     def __init__(self,version,config):
-        if not os.path.exists("log"):
-            os.mkdir("log")
+        if not os.path.exists(logFolderName):
+            os.mkdir(logFolderName)
         self.load_config(config)
         if self.is_store_users:
             default_yml = {}
-            file_desti = "userList"
+            file_desti = logFolderName + "/" + userlistname + ".yml"
             self.user_data_manager = pha_yaml.yaml_manager(default_yml,file_desti)
-            print("ping1")
             self.user_data = self.user_data_manager.get_yml()
-        print("ping6")
         self.print_ini_msg(version,config)
     
     @staticmethod
@@ -64,11 +67,10 @@ class logger:
         self.is_log_pings = self.to_boolean(config["Logging"]["storeMessages"])
         self.is_store_users = self.to_boolean(config["Logging"]["storeUsers"])
         self.is_debug = self.to_boolean(config["debug"])
-        self.file_path = "log"
         
     def display_msg(self, msg):
         print(msg)
-        self.write_to_file(msg)
+        self.log_line(msg)
         
     def info(self,*msg):
         end_msg = write_time() + " [INFO]" + list_to_string(msg)
@@ -83,21 +85,43 @@ class logger:
     def error(self, *msg):
         end_msg = write_time() + " [ERROR]" + list_to_string(msg)
         self.display_msg(end_msg)
-    
+    def warning(self, *msg):
+        end_msg = write_time() + " [WARNING]" + list_to_string(msg)
+        self.display_msg(end_msg)
     def register_user(self,client_port,client_address,client_username):
         msg = "from " + str(client_address) + ":" + str(client_port)
         
         if client_username is not None:
-            msg = "Connection as " + client_username.decode("utf8") +" "+ msg
+            str_username = client_username.decode("utf8")
+            msg = "Connection as " + str_username +" "+ msg
             self.info(msg)
+            self.log_user_join(str_username, str(client_address))
             return
         
         self.debug("Connection "+msg)
     
-    def write_to_file(self,msg):
+    def log_line(self, msg):
         if not self.is_log_pings:
             return
         
-        with open(self.file_path + "/"+logname+".log","a") as file:
+        with open(logFolderName + "/"+logname+".log","a") as file:
             file.write(msg + "\n")
-            pass
+            
+    def log_user_join(self, username, ip):
+        if not self.is_store_users:
+            return
+        #TODO : this solution does not bode well for multiple threads
+        fileLocation = logFolderName + "/" + userlistname + ".yml"
+        currentDict = {}
+        with open(fileLocation, "a") as readStream:
+            yaml_parser = yaml.YamlParser(readStream)
+            currentDict = yaml_parser.parse()
+            usernames = currentDict.keys()
+            if username in usernames:
+                currentDict[username]["joinAmount"] += 1 
+            else:
+                userDict = {"joinAmount" : 1}
+                currentDict[username] = userDict
+            
+        with open(fileLocation, "w") as overWriteStream:
+            yaml_parser.dump(currentDict, overWriteStream)

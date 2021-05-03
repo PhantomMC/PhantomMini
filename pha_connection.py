@@ -90,19 +90,22 @@ class connection_manager(threading.Thread):
             self.login_connection()
         
     def status_connection(self):
-        while True:
-            data = self.read_fully()
-            self.logger.debug("Recieved",data)
-            if data == b'\x00':
-                self.write_data(self.write_response())
-                self.logger.debug("Sent JSON response")
-            elif data == b'':
-                self.logger.debug("Connection aborted by client")
-                break
-            else:
-                self.write_data(self.pack_varint(len(data)) + data)
-                self.logger.debug("Responded to message with pong")
-                break
+        try:
+            while True:
+                data = self.read_fully()
+                self.logger.debug("Recieved",data)
+                if data == b'\x00':
+                    self.write_data(self.write_response())
+                    self.logger.debug("Sent JSON response")
+                elif data == b'':
+                    self.logger.debug("Connection aborted by client")
+                    break
+                else:
+                    self.write_data(self.pack_varint(len(data)) + data)
+                    self.logger.debug("Responded to message with pong")
+                    break
+        except Exception as e:
+            self.logger.warning(e)
     
     def interpret_login(self):
         packet_length = self.unpack_varint()
@@ -115,11 +118,14 @@ class connection_manager(threading.Thread):
         return self.pack_varint(len(full_data)) + full_data
     
     def login_connection(self):
-        recieved_data = self.interpret_login()
-        self.logger.debug("Recieved",str(recieved_data))
-        final_data = self.compile_disconnect_data();
-        self.logger.debug("Sent JSON disconnect message")
-        self.write_data(final_data)
+        try:
+            recieved_data = self.interpret_login()
+            self.logger.debug("Recieved",str(recieved_data))
+            final_data = self.compile_disconnect_data();
+            self.logger.debug("Sent JSON disconnect message")
+            self.write_data(final_data)
+        except Exception as e:
+            self.logger.warning(e)
     
     def register_event(self):
         self.logger.register_user(self.client_port, self.client_address, self.username)
