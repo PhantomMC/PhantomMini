@@ -74,8 +74,9 @@ class pha_server(threading.Thread):
             i = 1
             while True:
                 self.serverSocket.listen(1)
-                conn, addr = self.serverSocket.accept()
+                (conn, addr) = self.serverSocket.accept()
                 conn_mngr = connection_manager(conn,self.json_creator,self.logger,i,addr)
+                self.logger.debug("Addres:",socket.inet_ntop(socket.AF_INET, addr))
                 conn_mngr.start()
                 i += 1
             print("This will never get triggered, but has to be here because of python")

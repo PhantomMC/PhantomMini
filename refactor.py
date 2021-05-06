@@ -10,7 +10,10 @@
 class YamlParser:
     def __init__(self,file):
         self.linecount = 0
-        self.allLines = file.readlines(  )
+        try:
+            self.allLines = file.readlines(  )
+        except:
+            self.allLines = []
         self.block_type_switch = {
             dict : self.parse_block,
             list : self.parse_list,
@@ -96,7 +99,6 @@ class YamlParser:
                         + '"' 
                         + self.parse_stringsection(indent+2) 
                         + '"')
-            
         return (indent, line[:commentpos])
     
     def undreadline(self):

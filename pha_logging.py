@@ -43,11 +43,6 @@ class logger:
         if not os.path.exists(logFolderName):
             os.mkdir(logFolderName)
         self.load_config(config)
-        if self.is_store_users:
-            default_yml = {}
-            file_desti = logFolderName + "/" + userlistname + ".yml"
-            self.user_data_manager = pha_yaml.yaml_manager(default_yml,file_desti)
-            self.user_data = self.user_data_manager.get_yml()
         self.print_ini_msg(version,config)
     
     @staticmethod
@@ -111,17 +106,20 @@ class logger:
         if not self.is_store_users:
             return
         #TODO : this solution does not bode well for multiple threads
-        fileLocation = logFolderName + "/" + userlistname + ".yml"
+        fileDesti= logFolderName + "/" + userlistname + ".yml"
         currentDict = {}
-        with open(fileLocation, "a") as readStream:
+        with open(fileDesti) as readStream:
             yaml_parser = yaml.YamlParser(readStream)
             currentDict = yaml_parser.parse()
             usernames = currentDict.keys()
             if username in usernames:
-                currentDict[username]["joinAmount"] += 1 
+                joinAmount = int(currentDict[username]["joinAmount"]) + 1
+                self.debug("Added 1 to user joinAmount for a total of", joinAmount, "joins")
+                currentDict[username]["joinAmount"] = joinAmount
             else:
+                self.debug("Added user") 
                 userDict = {"joinAmount" : 1}
                 currentDict[username] = userDict
             
-        with open(fileLocation, "w") as overWriteStream:
-            yaml_parser.dump(currentDict, overWriteStream)
+        with open(fileDesti, "w") as overWriteStream:
+            yaml.dump(currentDict, overWriteStream)
