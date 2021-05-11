@@ -24,7 +24,7 @@ A lightweight [C](https://www.iso.org/standard/74528.html) server that responds 
 2. Edit the `config.yml` file.
 3. While in the directory with phantom.c, run `make`
    - *Phantom was designed with [gcc](https://gcc.gnu.org/) and [make](https://www.gnu.org/software/make/manual/make.html)*
-   - They are installed by default on most OS systems.
+   - *They are installed by default on most OS systems*.
 4. Run `./PhantomServer`
 
 # Configuration
