@@ -6,6 +6,10 @@ __pycache__/
 # C extensions
 *.so
 
+# Compiled C Binary 
+PhantomServer
+
+
 # Distribution / packaging
 #.Python
 #build/
