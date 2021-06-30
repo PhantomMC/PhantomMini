@@ -18,7 +18,7 @@
 #define PROTOCOL 0
 #define PORT 25104
 
-void assert(bool valid, char msg[])
+void assert(int valid, char msg[])
 {
 	if (valid)
 		return;
@@ -28,12 +28,8 @@ void assert(bool valid, char msg[])
 
 int main(int argc, char const *argv[])
 {
-	int server_fd, new_socket, valread;
-	struct sockaddr_in address;
+	int server_fd;
 	int opt = 1;
-	int addrlen = sizeof(address);
-	char buffer[1024] = {0};
-	char *hello = "Hello from server";
 
 	// Creating socket file descriptor
 	assert(!((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0), "socket failed");
@@ -43,24 +39,33 @@ int main(int argc, char const *argv[])
 						&opt, sizeof(opt))),
 		   "setsockopt");
 
+	struct sockaddr_in address;
+	int addrlen = sizeof(address);
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = htons(PORT);
 
 	// Forcefully attaching socket to the port PORT
-	assert(!(bind(server_fd, (struct sockaddr *)&address,
-				  sizeof(address)) < 0),
-		   "bind failed");
+	assert(!(bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0), "bind failed");
 
 	assert(!(listen(server_fd, 3) < 0), "listen");
 
-	assert(!((new_socket = accept(server_fd, (struct sockaddr *)&address,
-								  (socklen_t *)&addrlen)) < 0),
-		   "accept");
+	int new_socket, valread;
+	char buffer[1024] = {0};
+	char *hello = "Hello from server";
+	struct messageInfoData info;
+	info.empty = true;
+	while (1)
+	{
 
-	valread = read(new_socket, buffer, 1024);
-	printf("%s\n", buffer);
-	send(new_socket, hello, strlen(hello), 0);
-	printf("Hello message sent\n");
+		assert(!((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t *)&addrlen)) < 0), "accept");
+
+		valread = read(new_socket, buffer, 1024);
+		printf("Recieved: %s\n", buffer);
+		getMessageInfoData(buffer, (struct messageInfoData *)&info);
+		//Write response
+		//send response
+	}
+
 	return 0;
 }
