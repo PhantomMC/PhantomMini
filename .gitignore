@@ -6,30 +6,26 @@ __pycache__/
 # C extensions
 *.so
 
-# Compiled C Binary 
-PhantomServer
-
-
 # Distribution / packaging
-#.Python
-#build/
-#develop-eggs/
-#dist/
-#downloads/
-#eggs/
-#.eggs/
-#lib/
-#lib64/
-#parts/
-#sdist/
-#var/
-#wheels/
-#pip-wheel-metadata/
-#share/python-wheels/
-#*.egg-info/
-#.installed.cfg
-#*.egg
-#MANIFEST
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -159,3 +155,4 @@ log/pings9.old
 log/pings19.old
 userList.yml
 console9.old
+phantom.o
