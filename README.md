@@ -1,5 +1,5 @@
 
-> This project is a work in progress. The first working release will probably be posted in late July.
+> This project is a work in progress. The first working release will probably be posted in late September.
 
 # Description
 A lightweight [C](https://www.iso.org/standard/74528.html) server that responds to requests from MC clients with a MOTD and an icon.
