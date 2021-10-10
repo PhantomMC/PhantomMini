@@ -6,7 +6,7 @@ A lightweight [C](https://www.iso.org/standard/74528.html) server that responds 
 <br />Note that Phantom instances only *appear* as servers; by design, they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
 
 ### Features
-- Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico) - [suggested spects](https://www.friendlyarm.com/index.php?route=product/product&product_id=132))
+- Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico) - [suggested specs](https://www.friendlyarm.com/index.php?route=product/product&product_id=132))
 - Customizable Server icon, MOTD messages, MOTD overlay, and player list preview.
 - Customizable kick messages
 - Customizable port.
