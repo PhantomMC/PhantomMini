@@ -15,7 +15,7 @@ import threading
 import _thread
 import time
 
-Version = "0.7.13"
+Version = "0.7.14"
 defaultConfig = {
         "configVersion" : 8,
         "serverInfo" : {
@@ -56,7 +56,7 @@ class pha_server(threading.Thread):
         self.logger.debug("host:", self.host, "port", self.port)
         
     def getServerSocket(self):
-        tryAmount = 3
+        tryAmount = 5
         tryWait = 16 # s
         for i in range(tryAmount):
             try:
@@ -65,28 +65,62 @@ class pha_server(threading.Thread):
                 serverSocket.bind(addr_info[0][-1])
                 return serverSocket
             except OSError:
-                print("Port is already in use")
+                msg = "Port is already in use"
+                if(self.logger == None):
+                    print(msg)
+                else:
+                    self.logger.warning(msg)
                 time.sleep(tryWait)
                 tryWait *= 2
         
     def run(self):
+        currentServerSocket = self.serverSocket
+        restart = False
         try:
             i = 1
             while True:
-                self.serverSocket.listen(1)
-                (conn, addr) = self.serverSocket.accept()
+                currentServerSocket.listen(0)
+                (conn, addr) = currentServerSocket.accept()
                 conn_mngr = connection_manager(conn,self.json_creator,self.logger,i,addr)
-                self.logger.debug("Addres:",socket.inet_ntop(socket.AF_INET, addr))
+                self.logger.debug("Addres:",self.getIpAddress(addr))
                 conn_mngr.start()
                 i += 1
             print("This will never get triggered, but has to be here because of python")
+        except OSError as e:
+            restart = True
+            self.logger.error(e)
+                
         except Exception as e:
             self.logger.error(e)
         finally:
-            self.serverSocket.close()
+            try:
+                currentServerSocket.close()
+            except AttributeError:
+                pass
+            except:
+                self.logger.warning("Unable to close port")
+        if restart:
+            self.serverSocket = self.getServerSocket()
+            self.run()
+        
     def stop(self):
-        self.serverSocket.close()
-    
+        try:
+            self.serverSocket.close()
+        except AttributeError:
+            pass
+    @staticmethod
+    def getIpAddress(rawAddress):
+        ipAddres = ""
+        i = 12
+        for rawByte in rawAddress:
+            part = rawByte & 255
+            ipAddres = ipAddres + str(part)
+            i -= 1
+            if(i > 0):
+                ipAddres = ipAddres + "."
+                
+        return ipAddres
+            
 class phantom:
     def __init__(self):
         self.startServer()
@@ -98,9 +132,9 @@ class phantom:
                 self.phantom_server.stop()
                 break;
             if command.lower() is "restart":
-                print("<< restart is currently not implemented yet")
-                #self.phantom_server.stop
-                #self.startServer()
+                self.phantom_server.stop()
+                self.phantom_server.stop
+                self.startServer()
                 continue
             
             print("unknown command")

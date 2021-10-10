@@ -104,6 +104,8 @@ class connection_manager(threading.Thread):
                     self.write_data(self.pack_varint(len(data)) + data)
                     self.logger.debug("Responded to message with pong")
                     break
+        except OSError:
+            pass
         except Exception as e:
             self.logger.warning(e)
     
@@ -124,6 +126,8 @@ class connection_manager(threading.Thread):
             final_data = self.compile_disconnect_data();
             self.logger.debug("Sent JSON disconnect message")
             self.write_data(final_data)
+        except OSError:
+            return
         except Exception as e:
             self.logger.warning(e)
     
