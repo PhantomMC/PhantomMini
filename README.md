@@ -1,12 +1,12 @@
 
-> This project is a work in progress. The first working release will probably be posted in late September.
+> This project is a work in progress. The first working release will probably be posted in late December.
 
 # Description
 A lightweight [C](https://www.iso.org/standard/74528.html) server that responds to requests from MC clients with a MOTD and an icon.
 <br />Note that Phantom instances only *appear* as servers; by design, they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
 
 ### Features
-- Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico))
+- Extremely lightweight -- ([minimum specs](https://github.com/wemos/docs/blob/master/docs/en/w600/w600_pico.rst#w600-pico) - [suggested spects](https://www.friendlyarm.com/index.php?route=product/product&product_id=132))
 - Customizable Server icon, MOTD messages, MOTD overlay, and player list preview.
 - Customizable kick messages
 - Customizable port.
