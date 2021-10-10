@@ -14,7 +14,6 @@ class yaml_manager:
         self.file_desti = file_desti
         self.is_config = is_config
         self.default_YML = default_YML
-        self.is_micropython = False
     def _try_get_yml(self):
         if os.path.exists(self.file_desti + ".yml"):
             return self._load_yml()
@@ -28,7 +27,6 @@ class yaml_manager:
             file = open(self.file_desti + ".yml",encoding = "utf8")
         except:#for micropython
             file = open(self.file_desti + ".yml")
-            self.is_micropython = True
             
         try:
             self.yml_dictionary = yaml.safe_load(file)

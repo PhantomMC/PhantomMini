@@ -16,12 +16,10 @@ import requests
 import uuid
 
 class bstats(threading.Thread):
-    def __init__(self,plugin_id,is_micropython,logger):
+    def __init__(self,plugin_id):
         threading.Thread.__init__(self)
         self.id = plugin_id
         self.create_bstat_dictionary()
-        self.is_micropython = is_micropython
-        self.logger = logger
         
     def create_bstat_dictionary(self):
         arch = architecture()
@@ -78,7 +76,6 @@ class bstats(threading.Thread):
         
         url = 'https://bstats.org/submitData/server-implementation'
         res = requests.post(url, json=self.bstat_dict)
-        self.logger.debug("Sent message to bstats")
         if res.text == "":
             pass #TODO idk, some errorprocessing
         

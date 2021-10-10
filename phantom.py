@@ -9,9 +9,9 @@ import socket
 from pha_connection import connection_manager
 from pha_json import json_creator
 from pha_logging import logger
-from pha_command import command_manager
 from pha_yaml import yaml_manager
 from pha_bstats import bstats
+import threading
 
 Version = "0.7.0"
 defaultConfig = {
@@ -37,47 +37,52 @@ defaultConfig = {
         }
 
 
-class phantom:
-    def __init__(self):
-        config_path = "config"
-        is_config = True
-        
-        config_retriever = yaml_manager(defaultConfig,config_path,is_config)
-        self.config = config_retriever.get_yml()
-        
-        command_manager().start()
-        
-        self.is_micropython = config_retriever.is_micropython
-        
-        
+class server(threading.Thread):
+    def __init__(self, config):
         self.logger = logger(Version,self.config)
         
-        plugin_id = 10892
-        bstats(plugin_id, self.is_micropython,self.logger).start()
         self.json_creator = json_creator(self.config,self.logger)
         self.host = self.config["serverInfo"]["host"]
         self.port = self.config["serverInfo"]["port"]
         
-    def start(self):
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    def run(self):
+        self.listeningSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         try:
-            s.bind((self.host, self.port))
+            self.listeningSocket.bind((self.host, self.port))
             i = 1
             while True:
-                s.listen(1)
-                conn, addr = s.accept()
+                self.listeningSocket.listen(1)
+                conn, addr = self.listeningSocket.accept()
                 conn_mngr = connection_manager(conn,self.json_creator,self.logger,i,addr)
                 conn_mngr.start()
                 i += 1
             print("This will never get triggered, but has to be here because of python")
+        except Exception as e:
+            self.logger.error(e)
         finally:
-            s.close()
-    
-    
+            self.close()
+    def close(self):
+        self.listeningSocket.close()
 
-phantomServer = phantom()
+class phantom:
+    def __init__(self):
+        plugin_id = 10892
+        bstats(plugin_id).start()
 
-try:
-    phantomServer.start()
-except KeyboardInterrupt:
-    print("Stopped....")
+        config_path = "config"
+        is_config = True
+        config_retriever = yaml_manager(defaultConfig,config_path,is_config)
+        config = config_retriever.get_yml()
+    
+        phantomServer = server(config)
+        phantomServer.start()
+    
+    def start(self):
+        while(True):
+            command = input()
+            if command.lower() == "stop" or "exit":
+                break;
+
+
+
+phantom().start()

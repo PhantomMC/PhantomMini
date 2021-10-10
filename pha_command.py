@@ -9,11 +9,3 @@
 import threading
 import os
 
-class command_manager(threading.Thread):
-    def run(self):
-        while(True):
-            command = input()
-            if command.lower() == "stop" or "exit":
-                break;
-                
-        os._exit(1)

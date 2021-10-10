@@ -25,13 +25,6 @@ def list_to_string(alist):
         output = output + " " + item
         
     return output
-
-def generate_n_char(n,achar):
-    output = achar;
-    for i in range(n-1):
-        output = output+achar
-        
-    return output
         
 def write_time():
     return strftime("%y.%m.%d@%H:%M", localtime())
@@ -56,26 +49,29 @@ class logger:
             
         
         self.create_new_log()
-        row1 = "----------------------\n"
-        row2 = "|   Phantom server   |\n"
-        row3 = "|   Version " + version + generate_n_char(9-len(version)," ")+"|\n"
-        row4 = "----------------------\n"
-        row5 = "[debug = " + str(self.is_debug) + ", style = " + str(config["Style"])+"]\n"
-        msg =  row1 + row2 + row3 + row4 + row5
-        print (msg)
-        self.write_to_file(msg)
+        msg = write_time() + "<Phantom V."+version+"> Listening on port " + config["serverInfo"]["port"]
+        self.printMsg(msg)
         
     def info(self,*msg):
         end_msg = write_time() + " [INFO]" + list_to_string(msg)
-        
-        print(end_msg)
-        self.write_to_file(end_msg)
+        self.printMsg(end_msg)
     
     def debug(self,*msg):
         if self.is_debug:
             end_msg = write_time() +" [DEBUG]" + list_to_string(msg)
-            self.write_to_file(end_msg)
-            print(end_msg)
+            self.printMsg(end_msg)
+            
+    def error(self, *msg):
+        end_msg = write_time() + " [ERROR]" + list_to_string(msg)
+        self.printMsg(end_msg)
+    
+    def warning(self, *msg):
+        end_msg = write_time() + " [WARNING]" + list_to_string(msg)
+        self.printMsg(end_msg)
+        
+    def printMsg(self, msg):
+        self.write_to_file(msg)
+        print(msg)
         
     def register_user(self,client_port,client_address,client_username):
         msg = "from " + client_address + ":" + str(client_port)
