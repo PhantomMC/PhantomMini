@@ -66,7 +66,7 @@ class pha_server(threading.Thread):
                 return serverSocket
             except OSError:
                 msg = "Port is already in use"
-                if(self.logger == None):
+                if not hasattr(self, 'logger'):
                     print(msg)
                 else:
                     self.logger.warning(msg)
