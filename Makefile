@@ -8,12 +8,12 @@
 
 CC=gcc
 CFLAGS=-I.
-#FOLDER = ./lib/temporary/
-#DEPS = $(FOLDER)gibonacci.h $(FOLDER)primals.h
+FOLDER = ./lib/protocol/
+DEPS = $(FOLDER)protocol.h
 OBJ = phantom.c
 
-#%.o: %.c $(DEPS)
-#	$(CC) -c -o $@ $< $(CFLAGS)
+%.o: %.c $(DEPS)
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 Phantom: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
