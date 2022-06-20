@@ -4,7 +4,7 @@
  This Source Code Form is subject to the terms of the Mozilla Public
  License, v. 2.0. If a copy of the MPL was not distributed with this
  file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+
  @author: Thorin
 */
 
@@ -54,7 +54,7 @@ int main(int argc, char const *argv[])
 	char buffer[1024] = {0};
 	char *hello = "Hello from server";
 	struct messageInfoData info;
-	info.empty = true;
+	info.empty = 1;
 	while (1)
 	{
 
