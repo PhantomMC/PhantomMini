@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <netinet/in.h>
 #include <string.h>
+#include "lib/protocol/protocol.h"
 
 #define PROTOCOL 0
 #define PORT 25104
