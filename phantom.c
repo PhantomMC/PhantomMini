@@ -63,7 +63,7 @@ int main(int argc, char const *argv[])
 
 		valread = read(new_socket, buffer, 1024);
 		printf("Recieved: %s\n", buffer);
-		getMessageInfoData(buffer, (struct messageInfoData *)&info);
+		getMessageInfoData(buffer, (struct messageInfoData)&info);
 		//Write response
 		//send response
 	}
