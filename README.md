@@ -1,8 +1,8 @@
-
-> This project is a work in progress. The first working release will probably be posted in late December.
+> THIS PROJECT IS ON HOLD.
 
 # Description
-A lightweight [C](https://www.iso.org/standard/74528.html) server that responds to requests from MC clients with a MOTD and an icon.
+This is a standalone, self-hosted, version of the free minecraft broadcaster "[Phantom](https://phantom.thorinwasher.dev)".<br/>
+It contains a lightweight [C](https://www.iso.org/standard/74528.html) server that responds to requests from MC clients with a MOTD and an icon.
 <br />Note that Phantom instances only *appear* as servers; by design, they do not support [gameplay](https://minecraft.fandom.com/wiki/Gameplay).
 
 ### Features
